@@ -1,0 +1,412 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B0001 /* KouKouMoMoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0001 /* KouKouMoMoApp.swift */; };
+		B0002 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0002 /* HomeView.swift */; };
+		B0003 /* PlayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0003 /* PlayMode.swift */; };
+		B0004 /* GameContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0004 /* GameContainerView.swift */; };
+		B0005 /* GamePhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0005 /* GamePhase.swift */; };
+		B0006 /* ToyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0006 /* ToyViewModel.swift */; };
+		B0007 /* NoseDoodle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0007 /* NoseDoodle.swift */; };
+		B0008 /* NavelDoodle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0008 /* NavelDoodle.swift */; };
+		B0009 /* EarDoodle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0009 /* EarDoodle.swift */; };
+		B0010 /* FingerDoodle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0010 /* FingerDoodle.swift */; };
+		B0011 /* BubblesDoodle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011 /* BubblesDoodle.swift */; };
+		B0012 /* PenDoodle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0012 /* PenDoodle.swift */; };
+		B0013 /* GestureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0013 /* GestureEngine.swift */; };
+		B0014 /* GestureSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0014 /* GestureSurface.swift */; };
+		B0015 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0015 /* AudioManager.swift */; };
+		B0016 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0016 /* HapticManager.swift */; };
+		B0017 /* DoodleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0017 /* DoodleStyle.swift */; };
+		B0018 /* Rough.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0018 /* Rough.swift */; };
+		B0019 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0019 /* Extensions.swift */; };
+		B0020 /* DoodleCloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0020 /* DoodleCloseButton.swift */; };
+		B0021 /* CompletionBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0021 /* CompletionBanner.swift */; };
+		B0100 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0100 /* Assets.xcassets */; };
+		B0101 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A0101 /* Localizable.xcstrings */; };
+		B0102 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A0102 /* InfoPlist.xcstrings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A0001 /* KouKouMoMoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/App/KouKouMoMoApp.swift; sourceTree = "<group>"; };
+		A0002 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Home/HomeView.swift; sourceTree = "<group>"; };
+		A0003 /* PlayMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Home/PlayMode.swift; sourceTree = "<group>"; };
+		A0004 /* GameContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Game/GameContainerView.swift; sourceTree = "<group>"; };
+		A0005 /* GamePhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Game/GamePhase.swift; sourceTree = "<group>"; };
+		A0006 /* ToyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Game/ToyViewModel.swift; sourceTree = "<group>"; };
+		A0007 /* NoseDoodle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Game/Doodles/NoseDoodle.swift; sourceTree = "<group>"; };
+		A0008 /* NavelDoodle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Game/Doodles/NavelDoodle.swift; sourceTree = "<group>"; };
+		A0009 /* EarDoodle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Game/Doodles/EarDoodle.swift; sourceTree = "<group>"; };
+		A0010 /* FingerDoodle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Game/Doodles/FingerDoodle.swift; sourceTree = "<group>"; };
+		A0011 /* BubblesDoodle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Game/Doodles/BubblesDoodle.swift; sourceTree = "<group>"; };
+		A0012 /* PenDoodle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Game/Doodles/PenDoodle.swift; sourceTree = "<group>"; };
+		A0013 /* GestureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/GestureEngine/GestureEngine.swift; sourceTree = "<group>"; };
+		A0014 /* GestureSurface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/GestureEngine/GestureSurface.swift; sourceTree = "<group>"; };
+		A0015 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Audio/AudioManager.swift; sourceTree = "<group>"; };
+		A0016 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Haptics/HapticManager.swift; sourceTree = "<group>"; };
+		A0017 /* DoodleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Utils/DoodleStyle.swift; sourceTree = "<group>"; };
+		A0018 /* Rough.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Utils/Rough.swift; sourceTree = "<group>"; };
+		A0019 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Utils/Extensions.swift; sourceTree = "<group>"; };
+		A0020 /* DoodleCloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Components/DoodleCloseButton.swift; sourceTree = "<group>"; };
+		A0021 /* CompletionBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Components/CompletionBanner.swift; sourceTree = "<group>"; };
+		A0100 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = KouKouMoMo/Assets/Assets.xcassets; sourceTree = "<group>"; };
+		A0101 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = KouKouMoMo/Assets/Localizable.xcstrings; sourceTree = "<group>"; };
+		A0102 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = KouKouMoMo/Assets/InfoPlist.xcstrings; sourceTree = "<group>"; };
+		A0200 /* KouKouMoMo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KouKouMoMo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C0001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D0001 = {
+			isa = PBXGroup;
+			children = (
+				D0002 /* KouKouMoMo */,
+				D0003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D0002 /* KouKouMoMo */ = {
+			isa = PBXGroup;
+			children = (
+				D0010 /* App */,
+				D0011 /* Home */,
+				D0012 /* Game */,
+				D0013 /* GestureEngine */,
+				D0014 /* Audio */,
+				D0015 /* Haptics */,
+				D0016 /* Components */,
+				D0017 /* Utils */,
+				D0018 /* Assets */,
+			);
+			path = KouKouMoMo;
+			sourceTree = "<group>";
+		};
+		D0003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A0200 /* KouKouMoMo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D0010 /* App */ = {
+			isa = PBXGroup;
+			children = ( A0001 /* KouKouMoMoApp.swift */, );
+			path = App;
+			sourceTree = "<group>";
+		};
+		D0011 /* Home */ = {
+			isa = PBXGroup;
+			children = ( A0002 /* HomeView.swift */, A0003 /* PlayMode.swift */, );
+			path = Home;
+			sourceTree = "<group>";
+		};
+		D0012 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				A0004 /* GameContainerView.swift */,
+				A0005 /* GamePhase.swift */,
+				A0006 /* ToyViewModel.swift */,
+				D0019 /* Doodles */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		D0019 /* Doodles */ = {
+			isa = PBXGroup;
+			children = (
+				A0007 /* NoseDoodle.swift */,
+				A0008 /* NavelDoodle.swift */,
+				A0009 /* EarDoodle.swift */,
+				A0010 /* FingerDoodle.swift */,
+				A0011 /* BubblesDoodle.swift */,
+				A0012 /* PenDoodle.swift */,
+			);
+			path = Doodles;
+			sourceTree = "<group>";
+		};
+		D0013 /* GestureEngine */ = {
+			isa = PBXGroup;
+			children = ( A0013 /* GestureEngine.swift */, A0014 /* GestureSurface.swift */, );
+			path = GestureEngine;
+			sourceTree = "<group>";
+		};
+		D0014 /* Audio */ = {
+			isa = PBXGroup;
+			children = ( A0015 /* AudioManager.swift */, );
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		D0015 /* Haptics */ = {
+			isa = PBXGroup;
+			children = ( A0016 /* HapticManager.swift */, );
+			path = Haptics;
+			sourceTree = "<group>";
+		};
+		D0016 /* Components */ = {
+			isa = PBXGroup;
+			children = ( A0020 /* DoodleCloseButton.swift */, A0021 /* CompletionBanner.swift */, );
+			path = Components;
+			sourceTree = "<group>";
+		};
+		D0017 /* Utils */ = {
+			isa = PBXGroup;
+			children = ( A0017 /* DoodleStyle.swift */, A0018 /* Rough.swift */, A0019 /* Extensions.swift */, );
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		D0018 /* Assets */ = {
+			isa = PBXGroup;
+			children = ( A0100 /* Assets.xcassets */, A0101 /* Localizable.xcstrings */, A0102 /* InfoPlist.xcstrings */, );
+			path = Assets;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E0001 /* KouKouMoMo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F0002 /* Build configuration list for PBXNativeTarget "KouKouMoMo" */;
+			buildPhases = (
+				C0003 /* Sources */,
+				C0002 /* Resources */,
+				C0001 /* Frameworks */,
+			);
+			buildRules = ();
+			dependencies = ();
+			name = KouKouMoMo;
+			productName = KouKouMoMo;
+			productReference = A0200 /* KouKouMoMo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E0002 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					E0001 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = F0001 /* Build configuration list for PBXProject "KouKouMoMo" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				"zh-Hans",
+				Base,
+			);
+			mainGroup = D0001;
+			productRefGroup = D0003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = ( E0001 /* KouKouMoMo */, );
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C0002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0100 /* Assets.xcassets in Resources */,
+				B0101 /* Localizable.xcstrings in Resources */,
+				B0102 /* InfoPlist.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C0003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0001 /* KouKouMoMoApp.swift in Sources */,
+				B0002 /* HomeView.swift in Sources */,
+				B0003 /* PlayMode.swift in Sources */,
+				B0004 /* GameContainerView.swift in Sources */,
+				B0005 /* GamePhase.swift in Sources */,
+				B0006 /* ToyViewModel.swift in Sources */,
+				B0007 /* NoseDoodle.swift in Sources */,
+				B0008 /* NavelDoodle.swift in Sources */,
+				B0009 /* EarDoodle.swift in Sources */,
+				B0010 /* FingerDoodle.swift in Sources */,
+				B0011 /* BubblesDoodle.swift in Sources */,
+				B0012 /* PenDoodle.swift in Sources */,
+				B0013 /* GestureEngine.swift in Sources */,
+				B0014 /* GestureSurface.swift in Sources */,
+				B0015 /* AudioManager.swift in Sources */,
+				B0016 /* HapticManager.swift in Sources */,
+				B0017 /* DoodleStyle.swift in Sources */,
+				B0018 /* Rough.swift in Sources */,
+				B0019 /* Extensions.swift in Sources */,
+				B0020 /* DoodleCloseButton.swift in Sources */,
+				B0021 /* CompletionBanner.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		F0003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ( "DEBUG=1", "$(inherited)", );
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F0004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F0005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_LANGUAGE = en;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = KouKouMoMo;
+				INFOPLIST_KEY_LSRequiresIPhoneOS = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pth.koukoumomo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		F0006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_LANGUAGE = en;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = KouKouMoMo;
+				INFOPLIST_KEY_LSRequiresIPhoneOS = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pth.koukoumomo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F0001 /* Build configuration list for PBXProject "KouKouMoMo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = ( F0003 /* Debug */, F0004 /* Release */, );
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F0002 /* Build configuration list for PBXNativeTarget "KouKouMoMo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = ( F0005 /* Debug */, F0006 /* Release */, );
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E0002 /* Project object */;
+}

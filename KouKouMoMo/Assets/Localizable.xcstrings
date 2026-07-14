@@ -1,0 +1,175 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "action.close" : {
+      "comment" : "Accessibility label for the doodle close button.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Close" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关闭" } }
+      }
+    },
+    "home.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "KouKouMoMo" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "抠抠摸摸" } }
+      }
+    },
+    "home.subtitle" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "eyes closed. one finger. keep going." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "闭着眼 · 一根手指 · 一直玩" } }
+      }
+    },
+    "hint.rotation" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "draw small circles" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "画小圆" } }
+      }
+    },
+    "hint.vertical" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "slide up & down" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "上下滑动" } }
+      }
+    },
+    "hint.horizontal" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "slide side to side" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "左右滑动" } }
+      }
+    },
+    "hint.tap" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "keep tapping" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "一直点" } }
+      }
+    },
+    "hint.continuous" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "any little motion" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "随便动" } }
+      }
+    },
+    "play.nose.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Nose Pick" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "抠鼻孔" } }
+      }
+    },
+    "play.nose.subtitle" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "tiny circles inside" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "画个小圆" } }
+      }
+    },
+    "play.navel.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Belly Button" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "抠肚脐" } }
+      }
+    },
+    "play.navel.subtitle" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "dig a little deeper" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "越抠越深" } }
+      }
+    },
+    "play.ear.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ear Lobe" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "摸耳垂" } }
+      }
+    },
+    "play.ear.subtitle" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "soft & bouncy" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "软软 Q 弹" } }
+      }
+    },
+    "play.finger.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Finger Nibble" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "咬手指" } }
+      }
+    },
+    "play.finger.subtitle" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "chompy chompy" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "咔咔小咬" } }
+      }
+    },
+    "play.bubble.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Bubble Wrap" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "压泡泡" } }
+      }
+    },
+    "play.bubble.subtitle" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "pop · pop · pop" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "啪 · 啪 · 啪" } }
+      }
+    },
+    "play.pen.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pen Spin" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "转笔" } }
+      }
+    },
+    "play.pen.subtitle" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "faster faster" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "越转越快" } }
+      }
+    },
+    "completion.pop" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "pop!" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "啵！" } }
+      }
+    },
+    "completion.clean" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "✨ Clean!" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "✨ 干净啦" } }
+      }
+    },
+    "completion.comfy" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "so comfy~" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "舒服～" } }
+      }
+    },
+    "completion.snap" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "snap!" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "啪！" } }
+      }
+    },
+    "completion.pretty" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "smooth spin!" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "漂亮！" } }
+      }
+    },
+    "completion.seed_shell" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "seed shell" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "瓜子壳" } }
+      }
+    },
+    "completion.paper_ball" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "paper ball" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "小纸团" } }
+      }
+    },
+    "completion.candy_wrapper" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "candy wrap" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "糖纸" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}
