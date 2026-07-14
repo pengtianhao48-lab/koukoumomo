@@ -93,7 +93,7 @@
 				D0017 /* Utils */,
 				D0018 /* Resources */,
 			);
-			path = KouKouMoMo;
+			name = KouKouMoMo;
 			sourceTree = "<group>";
 		};
 		D0003 /* Products */ = {
@@ -107,13 +107,13 @@
 		D0010 /* App */ = {
 			isa = PBXGroup;
 			children = ( A0001 /* KouKouMoMoApp.swift */, );
-			path = App;
+			name = App;
 			sourceTree = "<group>";
 		};
 		D0011 /* Home */ = {
 			isa = PBXGroup;
 			children = ( A0002 /* HomeView.swift */, A0003 /* PlayMode.swift */, );
-			path = Home;
+			name = Home;
 			sourceTree = "<group>";
 		};
 		D0012 /* Game */ = {
@@ -124,7 +124,7 @@
 				A0006 /* ToyViewModel.swift */,
 				D0019 /* Doodles */,
 			);
-			path = Game;
+			name = Game;
 			sourceTree = "<group>";
 		};
 		D0019 /* Doodles */ = {
@@ -137,37 +137,37 @@
 				A0011 /* BubblesDoodle.swift */,
 				A0012 /* PenDoodle.swift */,
 			);
-			path = Doodles;
+			name = Doodles;
 			sourceTree = "<group>";
 		};
 		D0013 /* GestureEngine */ = {
 			isa = PBXGroup;
 			children = ( A0013 /* GestureEngine.swift */, A0014 /* GestureSurface.swift */, );
-			path = GestureEngine;
+			name = GestureEngine;
 			sourceTree = "<group>";
 		};
 		D0014 /* Audio */ = {
 			isa = PBXGroup;
 			children = ( A0015 /* AudioManager.swift */, );
-			path = Audio;
+			name = Audio;
 			sourceTree = "<group>";
 		};
 		D0015 /* Haptics */ = {
 			isa = PBXGroup;
 			children = ( A0016 /* HapticManager.swift */, );
-			path = Haptics;
+			name = Haptics;
 			sourceTree = "<group>";
 		};
 		D0016 /* Components */ = {
 			isa = PBXGroup;
 			children = ( A0020 /* DoodleCloseButton.swift */, A0021 /* CompletionBanner.swift */, );
-			path = Components;
+			name = Components;
 			sourceTree = "<group>";
 		};
 		D0017 /* Utils */ = {
 			isa = PBXGroup;
 			children = ( A0017 /* DoodleStyle.swift */, A0018 /* Rough.swift */, A0019 /* Extensions.swift */, );
-			path = Utils;
+			name = Utils;
 			sourceTree = "<group>";
 		};
 		D0018 /* Resources */ = {
