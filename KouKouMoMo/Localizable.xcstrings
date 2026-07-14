@@ -8,9 +8,16 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关闭" } }
       }
     },
+    "app_name" : {
+      "comment" : "App name shown on the home screen.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Busy Fingers" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "抠抠摸摸" } }
+      }
+    },
     "home.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "KouKouMoMo" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Busy Fingers" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "抠抠摸摸" } }
       }
     },

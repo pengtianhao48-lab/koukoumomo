@@ -23,7 +23,7 @@ struct HomeView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("home.title")
+            Text(String(localized: "app_name"))
                 .font(DoodleStyle.mono(32, .black))
                 .foregroundStyle(DoodleStyle.ink)
                 .rotationEffect(.degrees(-1.5))

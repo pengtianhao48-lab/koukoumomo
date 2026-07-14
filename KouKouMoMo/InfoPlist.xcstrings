@@ -4,7 +4,7 @@
     "CFBundleDisplayName" : {
       "comment" : "App display name.",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "KouKouMoMo" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Busy Fingers" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "抠抠摸摸" } }
       }
     }
