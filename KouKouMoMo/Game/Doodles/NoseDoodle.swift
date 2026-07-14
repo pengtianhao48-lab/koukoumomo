@@ -94,10 +94,11 @@ private enum NoseDoodleRenderer {
 
         // ============ NEW: A finger reaches into the right nostril ============
         // Finger enters from below the face and its tip orbits inside the right nostril.
-        let orbitR: CGFloat = 6 + CGFloat(progress) * 4
+        let orbitR: CGFloat = 2.4 + CGFloat(progress) * 2.2
         let spin = time * 3.4 + axis * 6
-        let tipCenter = CGPoint(x: rightNostril.midX + cos(spin) * orbitR,
-                                y: rightNostril.midY + sin(spin) * orbitR * 0.6)
+        let nostrilCenter = CGPoint(x: rightNostril.midX, y: rightNostril.midY)
+        let tipCenter = CGPoint(x: nostrilCenter.x + cos(spin) * orbitR,
+                                y: nostrilCenter.y + sin(spin) * orbitR * 0.45)
 
         // Finger geometry: knuckle at bottom-right, curves up to the nostril tip.
         // Draw as a wobbly capsule from (baseX, bottom) to tipCenter.
@@ -122,7 +123,16 @@ private enum NoseDoodleRenderer {
                                  bulge: 3, seed: 210),
                        with: .color(DoodleStyle.ink.opacity(0.6)), style: .doodleThin)
 
-        // Nail hint near the tip
+        // Repaint the nostril over the finger stem so the stem appears to enter the cavity,
+        // then draw only the fingertip inside the black nostril.
+        context.fill(Rough.ellipse(in: rightNostril, wobble: 0.9, seed: 112), with: .color(DoodleStyle.ink))
+        let fingertipRect = CGRect(x: tipCenter.x - 6, y: tipCenter.y - 4, width: 12, height: 8)
+        context.fill(Rough.ellipse(in: fingertipRect, wobble: 0.5, seed: 210),
+                     with: .color(DoodleStyle.paper))
+        context.stroke(Rough.ellipse(in: fingertipRect, wobble: 0.5, seed: 210),
+                       with: .color(DoodleStyle.ink), style: .doodleThin)
+
+        // Nail hint inside the nostril
         let nailRect = CGRect(x: tipCenter.x - 6, y: tipCenter.y - 3, width: 12, height: 6)
         context.stroke(Rough.arc(from: CGPoint(x: nailRect.minX, y: nailRect.midY),
                                  to: CGPoint(x: nailRect.maxX, y: nailRect.midY),
@@ -130,7 +140,7 @@ private enum NoseDoodleRenderer {
                        with: .color(DoodleStyle.ink.opacity(0.55)), style: .doodleThin)
 
         // Booger blob follows the finger tip
-        let boogerSize = 4 + CGFloat(progress) * 10
+        let boogerSize = 3 + CGFloat(progress) * 6
         if progress > 0.02 || isCompleting {
             let boogerRect = CGRect(x: tipCenter.x - boogerSize / 2, y: tipCenter.y - boogerSize / 2,
                                     width: boogerSize, height: boogerSize)
@@ -172,11 +182,6 @@ private enum NoseDoodleRenderer {
             }
         }
     }
-}
-
-// Helper — unused now that the finger is drawn with two stacked strokes.
-private extension StrokeStyle {
-    func thinnedOutline() -> StrokeStyle { self }
 }
 
 #Preview {

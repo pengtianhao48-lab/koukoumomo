@@ -2,7 +2,7 @@ import SwiftUI
 
 /// ⑥「转笔」— segmented hand-drawn pen (cap / body / tip). Slow drags rotate it 1:1 with the
 /// finger; a quick flick imparts real angular momentum that decays via friction, so the pen
-/// spins for several turns and then coasts to a stop. Every complete 360° fires a haptic tick.
+/// spins for several turns and then coasts to a stop. It stays quiet: no completion sound, haptic, or glow.
 struct PenDoodle: View {
     @ObservedObject var viewModel: ToyViewModel
 
@@ -12,13 +12,10 @@ struct PenDoodle: View {
     @State private var lastAxisSeen: Double = 0
     @State private var lastVelocitySeen: Double = 0
     @State private var trailSamples: [Double] = []
-    @State private var loopsCompleted: Int = 0
-    @State private var loopGlowStart: TimeInterval = -10
-
     // Tunables
     private let momentumGain: Double = 420       // how much angular momentum each unit of axis contributes
     private let friction: Double = 1.9           // exponential friction: av *= exp(-friction * dt)
-    private let flickThreshold: Double = 0.35    // velocity above which we count as a "flick" (extra haptic)
+    private let flickThreshold: Double = 0.35    // velocity above which we count as a flick
     private let maxAV: Double = 2600             // deg/sec cap
 
     var body: some View {
@@ -29,7 +26,6 @@ struct PenDoodle: View {
                                        angle: angle,
                                        trail: trailSamples,
                                        velocity: abs(angularVelocity) / 900,
-                                       glowElapsed: time - loopGlowStart,
                                        time: time)
             }
             .onChange(of: time) { _, newTime in step(now: newTime) }
@@ -53,10 +49,9 @@ struct PenDoodle: View {
             let contrib = abs(dAxis) > 0.001 ? dAxis : axis * velocity * 3.0
             angularVelocity += -contrib * momentumGain
 
-            // Flick detection — a big burst of velocity → extra push + a light "flick" haptic.
+            // Flick detection — a big burst of velocity → extra push. No haptic/sound for this toy.
             if velocity > flickThreshold && velocity - lastVelocitySeen > 0.15 {
                 angularVelocity += -sign(axis) * velocity * 800
-                HapticManager.shared.spinFlick()
             }
             lastAxisSeen = axis
             lastVelocitySeen = velocity
@@ -72,14 +67,6 @@ struct PenDoodle: View {
         // Integrate angle
         let newAngle = angle + angularVelocity * dt
         angle = newAngle
-
-        // Loop detection — every 360° accumulated → tick.
-        let loops = Int(abs(newAngle) / 360)
-        if loops != loopsCompleted {
-            loopsCompleted = loops
-            loopGlowStart = now
-            HapticManager.shared.spinLoop()
-        }
 
         // Trail sampling (only while moving fast enough to look nice)
         if abs(angularVelocity) > 180 {
@@ -101,7 +88,7 @@ struct PenDoodleThumbnail: View {
     var body: some View {
         Canvas { ctx, size in
             PenDoodleRenderer.draw(context: ctx, size: size, angle: -30, trail: [],
-                                   velocity: 0, glowElapsed: 999, time: 0)
+                                   velocity: 0, time: 0)
         }
     }
 }
@@ -109,7 +96,7 @@ struct PenDoodleThumbnail: View {
 enum PenDoodleRenderer {
     static func draw(context: GraphicsContext, size: CGSize,
                      angle: Double, trail: [Double], velocity: Double,
-                     glowElapsed: TimeInterval, time: TimeInterval) {
+                     time: TimeInterval) {
         let cx = size.width / 2
         let cy = size.height / 2
 
@@ -132,15 +119,6 @@ enum PenDoodleRenderer {
         drawPen(context: context, center: CGPoint(x: cx, y: cy), angle: angle,
                 length: penLength(size), alpha: 1.0, ghost: false)
 
-        // Loop glow
-        if glowElapsed < 0.4 {
-            let t = CGFloat(1 - glowElapsed / 0.4)
-            let r: CGFloat = penLength(size) * 0.55 * (1 + (1 - t) * 0.5)
-            let ring = CGRect(x: cx - r, y: cy - r, width: r * 2, height: r * 2)
-            context.stroke(Rough.ellipse(in: ring, wobble: 2.0, points: 42, seed: 720),
-                           with: .color(DoodleStyle.sunshine.opacity(Double(t) * 0.85)),
-                           style: .doodleBold)
-        }
         _ = time
     }
 

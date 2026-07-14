@@ -24,7 +24,13 @@ final class AudioManager {
     private init() {}
 
     func start(for mode: PlayMode) {
-        play(mode == .bubbleWrap ? 1104 : 1156)
+        switch mode {
+        case .penSpin: return
+        case .navelPoke: play(1104) // soft low tap before gentle skin-rub loop
+        case .nosePick:  play(1156) // small close-contact start, not a success sound
+        case .bubbleWrap: play(1104)
+        default: play(1156)
+        }
     }
 
     func continuous(for mode: PlayMode, progress: Double) {
@@ -33,21 +39,21 @@ final class AudioManager {
         lastContinuousAt = Date()
 
         switch mode {
-        case .nosePick, .navelPoke: play(progress > 0.65 ? 1157 : 1105)
+        case .nosePick:             play(1105) // subtle damp friction
+        case .navelPoke:            play(1104) // soft low skin-rub / ASMR-like tick
         case .earLobe:              play(1104)
         case .fingerNibble:         play(1155)
         case .bubbleWrap:           play(1306)
-        case .penSpin:              play(progress > 0.7 ? 1157 : 1104)
+        case .penSpin:              return
         }
     }
 
     func completion(for mode: PlayMode) {
         switch mode {
-        case .nosePick:     play(1306)
-        case .navelPoke, .earLobe: play(1022)
-        case .fingerNibble: play(1106)
+        case .nosePick:     play(1105)
         case .bubbleWrap:   play(1306)
-        case .penSpin:      play(1025)
+        case .fingerNibble: play(1106)
+        case .navelPoke, .earLobe, .penSpin: return
         }
     }
 

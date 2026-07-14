@@ -16,6 +16,8 @@ struct BubblesDoodle: View {
     @State private var burstStart: TimeInterval = 0
     @State private var offset: CGSize = .zero
     @State private var lastTap: CGPoint? = nil
+    @State private var pendingOffset: CGSize? = nil
+    @State private var pendingMoveStart: TimeInterval = 0
 
     var body: some View {
         GeometryReader { proxy in
@@ -29,6 +31,9 @@ struct BubblesDoodle: View {
                     SpatialTapGesture()
                         .onEnded { evt in handleTap(at: evt.location, viewSize: proxy.size, time: time) }
                 )
+                .onChange(of: time) { _, newTime in
+                    moveCanvasIfBurstFinished(now: newTime)
+                }
             }
         }
     }
@@ -70,8 +75,9 @@ struct BubblesDoodle: View {
         HapticManager.shared.bubblePop()
         viewModel.engine.handleTap()
 
-        // Move the whole canvas so the NEXT-NEAREST unpopped bubble to the tap point ends up
-        // directly under the finger — this way the user's hand stays put.
+        // Move the whole canvas AFTER the pop animation finishes so the burst stays at the
+        // original tap location for its full 300–350ms lifecycle. The pending target is applied
+        // from TimelineView.onChange once the burst has disappeared.
         var nextIdx = -1
         var nextD: CGFloat = .greatestFiniteMagnitude
         for r in 0..<Self.rows {
@@ -90,11 +96,19 @@ struct BubblesDoodle: View {
             //   viewSize.width/2 + nw.x + newOffset.x = p.x  →  newOffset.x = p.x - viewSize.width/2 - nw.x
             let target = CGSize(width: p.x - viewSize.width/2 - nw.x,
                                 height: p.y - viewSize.height/2 - nw.y)
-            withAnimation(.spring(response: 0.7, dampingFraction: 0.80)) {
-                offset = target
-            }
+            pendingOffset = target
+            pendingMoveStart = time
         }
         lastTap = p
+    }
+
+    private func moveCanvasIfBurstFinished(now: TimeInterval) {
+        guard let target = pendingOffset else { return }
+        guard now - pendingMoveStart >= 0.35 else { return }
+        pendingOffset = nil
+        withAnimation(.spring(response: 0.7, dampingFraction: 0.80)) {
+            offset = target
+        }
     }
 
     private func drawGrid(ctx: GraphicsContext, size: CGSize, time: TimeInterval) {
