@@ -68,6 +68,10 @@ struct PenDoodle: View {
         let newAngle = angle + angularVelocity * dt
         angle = newAngle
 
+        // Dedicated subtle spin-wind sound. Faster spin = denser/brighter system sound ticks;
+        // when friction slows the pen below threshold it naturally fades out.
+        AudioManager.shared.penSpinWind(speed: abs(angularVelocity) / maxAV)
+
         // Trail sampling (only while moving fast enough to look nice)
         if abs(angularVelocity) > 180 {
             if trailSamples.isEmpty || abs(newAngle - (trailSamples.last ?? newAngle)) > 12 {

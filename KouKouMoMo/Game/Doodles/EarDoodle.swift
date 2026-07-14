@@ -25,11 +25,11 @@ struct EarDoodleThumbnail: View {
     var body: some View {
         Canvas { ctx, size in
             EarDoodleRenderer.draw(context: ctx, size: size,
-                                   progress: 0.65,
+                                   progress: 0.85,
                                    axis: 1.0,
-                                   velocity: 0.35,
+                                   velocity: 0.75,
                                    isCompleting: false,
-                                   time: 0)
+                                   time: 0.12)
         }
     }
 }

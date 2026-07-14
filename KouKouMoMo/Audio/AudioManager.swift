@@ -21,6 +21,7 @@ final class AudioManager {
     static let shared = AudioManager()
 
     private var lastContinuousAt = Date.distantPast
+    private var lastPenWindAt = Date.distantPast
     private init() {}
 
     func start(for mode: PlayMode) {
@@ -55,6 +56,15 @@ final class AudioManager {
         case .fingerNibble: play(1106)
         case .navelPoke, .earLobe, .penSpin: return
         }
+    }
+
+    func penSpinWind(speed: Double) {
+        guard speed > 0.06 else { return }
+        let clamped = min(1, max(0, speed))
+        let interval = max(0.07, 0.30 - clamped * 0.22)
+        guard Date().timeIntervalSince(lastPenWindAt) > interval else { return }
+        lastPenWindAt = Date()
+        play(clamped > 0.55 ? 1157 : 1104)
     }
 
     private func play(_ id: SystemSoundID) {

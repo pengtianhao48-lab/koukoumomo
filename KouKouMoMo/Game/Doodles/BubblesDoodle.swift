@@ -6,8 +6,8 @@ import SwiftUI
 struct BubblesDoodle: View {
     @ObservedObject var viewModel: ToyViewModel
 
-    private static let cols = 15
-    private static let rows = 25
+    private static let cols = 35
+    private static let rows = 55
     private static let spacing: CGFloat = 60
     private static let bubbleRadius: CGFloat = 26
 
@@ -55,6 +55,10 @@ struct BubblesDoodle: View {
     }
 
     private func handleTap(at p: CGPoint, viewSize: CGSize, time: TimeInterval) {
+        // While a burst is still playing and before the canvas has moved, ignore taps to avoid
+        // overlapping pending moves and wrong-position bursts.
+        if pendingOffset != nil { return }
+        if let poppedAt, time - burstStart < 0.35 { return }
         // Nearest unpopped bubble to tap point.
         var bestIdx = -1
         var bestD: CGFloat = .greatestFiniteMagnitude
