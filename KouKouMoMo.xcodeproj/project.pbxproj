@@ -55,9 +55,9 @@
 		A0019 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Utils/Extensions.swift; sourceTree = "<group>"; };
 		A0020 /* DoodleCloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Components/DoodleCloseButton.swift; sourceTree = "<group>"; };
 		A0021 /* CompletionBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Components/CompletionBanner.swift; sourceTree = "<group>"; };
-		A0100 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = KouKouMoMo/Assets/Assets.xcassets; sourceTree = "<group>"; };
-		A0101 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = KouKouMoMo/Assets/Localizable.xcstrings; sourceTree = "<group>"; };
-		A0102 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = KouKouMoMo/Assets/InfoPlist.xcstrings; sourceTree = "<group>"; };
+		A0100 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = KouKouMoMo/Assets.xcassets; sourceTree = "<group>"; };
+		A0101 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = KouKouMoMo/Localizable.xcstrings; sourceTree = "<group>"; };
+		A0102 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = KouKouMoMo/InfoPlist.xcstrings; sourceTree = "<group>"; };
 		A0200 /* KouKouMoMo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KouKouMoMo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -91,7 +91,7 @@
 				D0015 /* Haptics */,
 				D0016 /* Components */,
 				D0017 /* Utils */,
-				D0018 /* Assets */,
+				D0018 /* Resources */,
 			);
 			path = KouKouMoMo;
 			sourceTree = "<group>";
@@ -170,10 +170,10 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		D0018 /* Assets */ = {
+		D0018 /* Resources */ = {
 			isa = PBXGroup;
 			children = ( A0100 /* Assets.xcassets */, A0101 /* Localizable.xcstrings */, A0102 /* InfoPlist.xcstrings */, );
-			path = Assets;
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
