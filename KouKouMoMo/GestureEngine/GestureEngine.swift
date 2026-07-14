@@ -38,6 +38,12 @@ final class GestureEngine {
         hasStarted = false
     }
 
+    /// Reset only the accumulated-progress counter (used by infinite-loop toys so they
+    /// can restart the cycle without dropping the finger-down state).
+    func resetAccumulator() {
+        accumulated = 0
+    }
+
     func handleTap() {
         beginIfNeeded()
         guard kind == .tap else { return }

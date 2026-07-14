@@ -1,19 +1,25 @@
 import SwiftUI
 
-/// ⑥「转笔」— segmented hand-drawn pen (cap / body / tip). Spins in response to the engine's
-///   rotation gesture, keeps inertia after finger-up, leaves 3–4 fading arc trails when fast,
-///   and glows briefly every time it completes a 360°.
+/// ⑥「转笔」— segmented hand-drawn pen (cap / body / tip). Slow drags rotate it 1:1 with the
+/// finger; a quick flick imparts real angular momentum that decays via friction, so the pen
+/// spins for several turns and then coasts to a stop. Every complete 360° fires a haptic tick.
 struct PenDoodle: View {
     @ObservedObject var viewModel: ToyViewModel
 
-    // Local spin state — visualisation only, doesn't touch viewModel.progress semantics.
-    @State private var angle: Double = 0            // current visual angle (degrees)
-    @State private var angularVelocity: Double = 0  // deg/sec, from engine axis/velocity
+    @State private var angle: Double = 0            // current visual angle (degrees, cumulative)
+    @State private var angularVelocity: Double = 0  // deg/sec
     @State private var lastFrame: TimeInterval = 0
-    @State private var lastAxis: Double = 0
-    @State private var trailSamples: [Double] = []  // recent angles for ghost trails
+    @State private var lastAxisSeen: Double = 0
+    @State private var lastVelocitySeen: Double = 0
+    @State private var trailSamples: [Double] = []
     @State private var loopsCompleted: Int = 0
-    @State private var loopGlowStart: TimeInterval = 0
+    @State private var loopGlowStart: TimeInterval = -10
+
+    // Tunables
+    private let momentumGain: Double = 420       // how much angular momentum each unit of axis contributes
+    private let friction: Double = 1.9           // exponential friction: av *= exp(-friction * dt)
+    private let flickThreshold: Double = 0.35    // velocity above which we count as a "flick" (extra haptic)
+    private let maxAV: Double = 2600             // deg/sec cap
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
@@ -22,60 +28,69 @@ struct PenDoodle: View {
                 PenDoodleRenderer.draw(context: ctx, size: size,
                                        angle: angle,
                                        trail: trailSamples,
-                                       velocity: abs(angularVelocity) / 720,
-                                       isCompleting: viewModel.isCompleting,
+                                       velocity: abs(angularVelocity) / 900,
                                        glowElapsed: time - loopGlowStart,
                                        time: time)
             }
-            .onChange(of: time) { _, newTime in
-                stepPhysics(now: newTime)
-            }
+            .onChange(of: time) { _, newTime in step(now: newTime) }
         }
     }
 
-    /// Integrates axis*velocity into an angular velocity + angle. Provides inertia when the user lets go.
-    private func stepPhysics(now: TimeInterval) {
+    private func step(now: TimeInterval) {
         if lastFrame == 0 { lastFrame = now; return }
         let dt = min(1.0/30, now - lastFrame)
         lastFrame = now
 
-        // Drive angular velocity from engine (rotation gesture provides axis = signed delta radians).
         let axis = viewModel.axis
         let velocity = viewModel.velocity
-        var av = angularVelocity
-        if axis != lastAxis || velocity > 0.02 {
-            let target = Double(sign(axis)) * velocity * 900
-            av += (target - av) * 0.35
-            lastAxis = axis
+
+        // Add momentum when there's fresh finger movement. NOTE: user reported the previous
+        // implementation rotated in the OPPOSITE direction of the finger — inverted here so a
+        // rightward drag rotates the pen clockwise (visually same-direction as the finger tip).
+        if axis != lastAxisSeen || velocity > 0.01 {
+            let dAxis = axis - lastAxisSeen
+            // Prefer the raw delta if it's meaningful, otherwise use axis directly.
+            let contrib = abs(dAxis) > 0.001 ? dAxis : axis * velocity * 3.0
+            angularVelocity += -contrib * momentumGain
+
+            // Flick detection — a big burst of velocity → extra push + a light "flick" haptic.
+            if velocity > flickThreshold && velocity - lastVelocitySeen > 0.15 {
+                angularVelocity += -sign(axis) * velocity * 800
+                HapticManager.shared.spinFlick()
+            }
+            lastAxisSeen = axis
+            lastVelocitySeen = velocity
         }
-        // Inertial decay when no user input
-        if velocity < 0.05 {
-            av *= pow(0.35, dt)
-        }
-        // Cap
-        if av > 1400 { av = 1400 }
-        if av < -1400 { av = -1400 }
-        angularVelocity = av
+
+        // Friction is ALWAYS applied — that's what makes the pen coast to a stop naturally.
+        angularVelocity *= exp(-friction * dt)
+        if angularVelocity > maxAV { angularVelocity = maxAV }
+        if angularVelocity < -maxAV { angularVelocity = -maxAV }
+        // Snap tiny residuals to zero so the pen truly stops.
+        if abs(angularVelocity) < 3 { angularVelocity = 0 }
 
         // Integrate angle
-        let newAngle = angle + av * dt
+        let newAngle = angle + angularVelocity * dt
         angle = newAngle
 
-        // Full-loop detection
+        // Loop detection — every 360° accumulated → tick.
         let loops = Int(abs(newAngle) / 360)
         if loops != loopsCompleted {
             loopsCompleted = loops
             loopGlowStart = now
-            HapticManager.shared.progress(intensity: 0.5)
-            viewModel.engine.handleTap()
+            HapticManager.shared.spinLoop()
         }
 
-        // Trail sampling
-        if trailSamples.isEmpty || abs(newAngle - (trailSamples.last ?? newAngle)) > 10 {
-            var updated = trailSamples
-            updated.append(newAngle)
-            if updated.count > 4 { updated.removeFirst(updated.count - 4) }
-            trailSamples = updated
+        // Trail sampling (only while moving fast enough to look nice)
+        if abs(angularVelocity) > 180 {
+            if trailSamples.isEmpty || abs(newAngle - (trailSamples.last ?? newAngle)) > 12 {
+                var updated = trailSamples
+                updated.append(newAngle)
+                if updated.count > 4 { updated.removeFirst(updated.count - 4) }
+                trailSamples = updated
+            }
+        } else if !trailSamples.isEmpty {
+            trailSamples = []
         }
     }
 
@@ -86,7 +101,7 @@ struct PenDoodleThumbnail: View {
     var body: some View {
         Canvas { ctx, size in
             PenDoodleRenderer.draw(context: ctx, size: size, angle: -30, trail: [],
-                                   velocity: 0, isCompleting: false, glowElapsed: 999, time: 0)
+                                   velocity: 0, glowElapsed: 999, time: 0)
         }
     }
 }
@@ -94,30 +109,30 @@ struct PenDoodleThumbnail: View {
 enum PenDoodleRenderer {
     static func draw(context: GraphicsContext, size: CGSize,
                      angle: Double, trail: [Double], velocity: Double,
-                     isCompleting: Bool, glowElapsed: TimeInterval, time: TimeInterval) {
+                     glowElapsed: TimeInterval, time: TimeInterval) {
         let cx = size.width / 2
         let cy = size.height / 2
 
-        // Faint hand hint (the pivot area) — small circle
+        // Pivot circle
         let pivot = CGRect(x: cx - 22, y: cy - 22, width: 44, height: 44)
         context.fill(Rough.ellipse(in: pivot, wobble: 1.2, points: 24, seed: 700),
                      with: .color(DoodleStyle.paperShadow.opacity(0.55)))
         context.stroke(Rough.ellipse(in: pivot, wobble: 1.2, points: 24, seed: 700),
                        with: .color(DoodleStyle.inkFaint), style: .doodleThin)
 
-        // Ghost trails (older = fainter)
+        // Ghost trails
         for (i, ta) in trail.enumerated() {
-            let alpha = Double(i + 1) / Double(trail.count + 1) * 0.28 * min(1.0, velocity * 2.0)
+            let alpha = Double(i + 1) / Double(trail.count + 1) * 0.30 * min(1.0, velocity * 2.0)
             if alpha < 0.02 { continue }
             drawPen(context: context, center: CGPoint(x: cx, y: cy), angle: ta,
                     length: penLength(size), alpha: alpha, ghost: true)
         }
 
-        // The pen itself
+        // Main pen
         drawPen(context: context, center: CGPoint(x: cx, y: cy), angle: angle,
                 length: penLength(size), alpha: 1.0, ghost: false)
 
-        // Loop glow — bright halo the first 0.4s after every full spin
+        // Loop glow
         if glowElapsed < 0.4 {
             let t = CGFloat(1 - glowElapsed / 0.4)
             let r: CGFloat = penLength(size) * 0.55 * (1 + (1 - t) * 0.5)
@@ -126,27 +141,13 @@ enum PenDoodleRenderer {
                            with: .color(DoodleStyle.sunshine.opacity(Double(t) * 0.85)),
                            style: .doodleBold)
         }
-
-        // Completion flourish — starburst
-        if isCompleting {
-            for k in 0..<12 {
-                let ang = Double(k) * .pi / 6 + sin(time) * 0.3
-                let r0: CGFloat = penLength(size) * 0.32
-                let r1: CGFloat = penLength(size) * 0.48
-                let a = CGPoint(x: cx + cos(ang) * r0, y: cy + sin(ang) * r0)
-                let b = CGPoint(x: cx + cos(ang) * r1, y: cy + sin(ang) * r1)
-                context.stroke(Rough.line(from: a, to: b, steps: 2, amp: 0.5, seed: 730 &+ k),
-                               with: .color(DoodleStyle.sunshine.opacity(0.75)),
-                               style: .doodle)
-            }
-        }
+        _ = time
     }
 
     private static func penLength(_ size: CGSize) -> CGFloat {
         min(size.width, size.height) * 0.7
     }
 
-    /// Draw a segmented pen: cap (short), body (long, striped), tip (small triangle).
     private static func drawPen(context: GraphicsContext, center: CGPoint, angle: Double,
                                 length: CGFloat, alpha: Double, ghost: Bool) {
         var pen = context
@@ -164,24 +165,22 @@ enum PenDoodleRenderer {
         let bodyFill = DoodleStyle.blush.opacity(alpha * (ghost ? 0.25 : 0.7))
         let capFill = DoodleStyle.ink.opacity(alpha * (ghost ? 0.35 : 0.9))
 
-        // Cap (right end)
+        // Cap
         let capRect = CGRect(x: halfLen - capLen, y: -thick/2, width: capLen, height: thick)
         let capPath = Rough.roundedRect(capRect, corner: thick/2, wobble: 0.5, seed: 740)
         pen.fill(capPath, with: .color(capFill))
         pen.stroke(capPath, with: .color(inkColor), style: .doodle)
-        // Clip ring near cap-body join
         let clipX = halfLen - capLen
         var clipPath = Path()
         clipPath.move(to: CGPoint(x: clipX, y: -thick/2 - 2))
         clipPath.addLine(to: CGPoint(x: clipX, y: thick/2 + 2))
         pen.stroke(clipPath, with: .color(inkColor), style: .doodle)
 
-        // Body (middle)
+        // Body
         let bodyRect = CGRect(x: -halfLen + tipLen, y: -thick/2, width: bodyLen, height: thick)
         let bodyPath = Rough.roundedRect(bodyRect, corner: 3, wobble: 0.4, seed: 741)
         pen.fill(bodyPath, with: .color(bodyFill))
         pen.stroke(bodyPath, with: .color(inkColor), style: .doodle)
-        // Grip stripes near the tip side
         for i in 0..<4 {
             let sx = -halfLen + tipLen + 6 + CGFloat(i) * 6
             var stripe = Path()
@@ -190,7 +189,7 @@ enum PenDoodleRenderer {
             pen.stroke(stripe, with: .color(inkColor.opacity(alpha * 0.7)), style: .doodleThin)
         }
 
-        // Tip (left end) - triangle
+        // Tip
         var tip = Path()
         tip.move(to: CGPoint(x: -halfLen, y: 0))
         tip.addLine(to: CGPoint(x: -halfLen + tipLen, y: -thick/2))

@@ -1,5 +1,19 @@
 import AudioToolbox
 import Foundation
+import Combine
+
+/// Global preferences (currently just the audio mute toggle). Persists to UserDefaults.
+final class Preferences: ObservableObject {
+    static let shared = Preferences()
+
+    @Published var isMuted: Bool {
+        didSet { UserDefaults.standard.set(isMuted, forKey: "koukoumomo.isMuted") }
+    }
+
+    private init() {
+        self.isMuted = UserDefaults.standard.bool(forKey: "koukoumomo.isMuted")
+    }
+}
 
 /// Very small wrapper around AudioServices system sounds so we ship without any bundled audio
 /// yet keep the ASMR feedback loop: a soft "start" tap, throttled continuous ticks, and a warm completion tone.
@@ -38,6 +52,7 @@ final class AudioManager {
     }
 
     private func play(_ id: SystemSoundID) {
+        if Preferences.shared.isMuted { return }
         AudioServicesPlaySystemSound(id)
     }
 }

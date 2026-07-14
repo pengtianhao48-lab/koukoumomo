@@ -65,6 +65,15 @@ enum PlayMode: String, CaseIterable, Identifiable {
         }
     }
 
+    /// Toys that never "complete" — they just loop forever while the user plays.
+    /// The view-model skips the completion cycle for these so no banner ever appears.
+    var isInfinite: Bool {
+        switch self {
+        case .navelPoke, .earLobe, .fingerNibble: return true
+        default: return false
+        }
+    }
+
     /// The completion phrase (randomized for some modes) is resolved on-demand so localization stays live.
     func completionCopy() -> String {
         switch self {

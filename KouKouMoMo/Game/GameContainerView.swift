@@ -28,11 +28,17 @@ struct GameContainerView: View {
             .allowsHitTesting(false)
 
             // The doodle itself in a centered fixed area so proportions stay stable across devices.
-            GeometryReader { proxy in
+            // BubbleWrap is a special case: it fills the entire screen so the bubble grid has no margins.
+            if mode == .bubbleWrap {
                 doodle
-                    .frame(width: proxy.size.width * 0.86,
-                           height: min(proxy.size.height * 0.72, 560))
-                    .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
+                    .ignoresSafeArea()
+            } else {
+                GeometryReader { proxy in
+                    doodle
+                        .frame(width: proxy.size.width * 0.86,
+                               height: min(proxy.size.height * 0.72, 560))
+                        .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
+                }
             }
 
             CompletionBanner(text: viewModel.completionText,
@@ -42,9 +48,12 @@ struct GameContainerView: View {
                 .padding(.top, 60)
                 .allowsHitTesting(false)
 
-            DoodleCloseButton()
-                .padding(.top, 12)
-                .padding(.trailing, 14)
+            HStack(spacing: 6) {
+                DoodleMuteButton()
+                DoodleCloseButton()
+            }
+            .padding(.top, 12)
+            .padding(.trailing, 14)
 
             // Very subtle gesture hint at the bottom for first-timers – hand-written style, no icon.
             VStack {

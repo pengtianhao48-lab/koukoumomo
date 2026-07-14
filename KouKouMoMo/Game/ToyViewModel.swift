@@ -59,9 +59,34 @@ final class ToyViewModel: ObservableObject {
         }
 
         audio.continuous(for: mode, progress: progress)
-        haptics.progress(intensity: max(progress * 0.5, event.velocity))
+        // Per-mode haptic textures — orbit tick for the rotating toys, chomp beats for the finger,
+        // gentle pull beats for the ear. Nose is the only mode that still terminates with a banner.
+        switch mode {
+        case .nosePick, .navelPoke:
+            haptics.orbitTick(intensity: max(progress * 0.4, event.velocity))
+        case .earLobe:
+            if event.velocity > 0.25 {
+                haptics.earPullBeat(strength: min(1, event.velocity))
+            }
+        case .fingerNibble:
+            if event.velocity > 0.30 {
+                haptics.chompBeat(intensity: min(1, event.velocity))
+            }
+        case .bubbleWrap:
+            break // bubble pops fire heavy haptic from BubblesDoodle itself
+        case .penSpin:
+            break // PenDoodle fires haptics from its own physics loop
+        }
 
-        if event.progress >= 1 { complete() }
+        if event.progress >= 1 {
+            if mode.isInfinite {
+                // Silent loop reset — no banner, no lock, keeps the toy running forever.
+                engine.resetAccumulator()
+                progress = 0
+            } else {
+                complete()
+            }
+        }
     }
 
     private func complete() {
