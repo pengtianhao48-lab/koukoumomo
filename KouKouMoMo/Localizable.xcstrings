@@ -8,6 +8,42 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关闭" } }
       }
     },
+    "action.mute" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Mute" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "静音" } }
+      }
+    },
+    "action.unmute" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unmute" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "取消静音" } }
+      }
+    },
+    "settings.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "设置" } }
+      }
+    },
+    "settings.version" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Version" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "版本" } }
+      }
+    },
+    "settings.contact" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Contact" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "联系作者" } }
+      }
+    },
+    "settings.mute" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Mute" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "静音" } }
+      }
+    },
     "app_name" : {
       "comment" : "App name shown on the home screen.",
       "localizations" : {
