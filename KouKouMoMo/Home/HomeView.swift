@@ -9,9 +9,6 @@ struct HomeView: View {
                 DoodleStyle.paper.ignoresSafeArea()
 
                 grid
-                    .padding(.horizontal, 22)
-                    .padding(.top, 76)
-                    .padding(.bottom, 22)
 
                 Button {
                     isShowingSettings = true
@@ -35,15 +32,26 @@ struct HomeView: View {
     }
 
     private var grid: some View {
-        let columns = [GridItem(.flexible(), spacing: 16),
-                       GridItem(.flexible(), spacing: 16)]
-        return LazyVGrid(columns: columns, spacing: 18) {
-            ForEach(PlayMode.allCases) { mode in
-                NavigationLink(destination: GameContainerView(mode: mode).navigationBarHidden(true)) {
-                    DoodleCard(mode: mode)
+        GeometryReader { proxy in
+            let topInset: CGFloat = 72
+            let horizontalInset: CGFloat = 22
+            let columnSpacing: CGFloat = 16
+            let rowSpacing: CGFloat = 18
+            let cellHeight = max(96, (proxy.size.height - topInset - rowSpacing * 2) / 3)
+            let columns = [GridItem(.flexible(), spacing: columnSpacing),
+                           GridItem(.flexible(), spacing: columnSpacing)]
+
+            LazyVGrid(columns: columns, spacing: rowSpacing) {
+                ForEach(PlayMode.allCases) { mode in
+                    NavigationLink(destination: GameContainerView(mode: mode).navigationBarHidden(true)) {
+                        DoodleCard(mode: mode)
+                            .frame(height: cellHeight)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
+            .padding(.horizontal, horizontalInset)
+            .padding(.top, topInset)
         }
     }
 }
@@ -65,7 +73,7 @@ private struct DoodleCard: View {
                 .padding(14)
                 .allowsHitTesting(false)
         }
-        .aspectRatio(1, contentMode: .fit)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityLabel(Text(mode.titleKey))
     }
 
@@ -132,11 +140,11 @@ private struct DoodleSettingsSheet: View {
                 DoodleDivider()
                     .frame(height: 12)
                 Button {
-                    if let url = URL(string: "mailto:pengtianhao@bytedance.com") {
+                    if let url = URL(string: "mailto:pengtianhao@vip.qq.com") {
                         openURL(url)
                     }
                 } label: {
-                    DoodleSettingsRow(title: String(localized: "settings.contact"), value: "pengtianhao@bytedance.com")
+                    DoodleSettingsRow(title: String(localized: "settings.contact"), value: "pengtianhao@vip.qq.com")
                 }
                 .buttonStyle(.plain)
                 DoodleDivider()

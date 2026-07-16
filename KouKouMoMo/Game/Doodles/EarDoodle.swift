@@ -24,13 +24,74 @@ struct EarDoodle: View {
 struct EarDoodleThumbnail: View {
     var body: some View {
         Canvas { ctx, size in
-            EarDoodleRenderer.draw(context: ctx, size: size,
-                                   progress: 0.85,
-                                   axis: 1.0,
-                                   velocity: 0.75,
-                                   isCompleting: false,
-                                   time: 0.12)
+            EarDoodleThumbnailRenderer.draw(context: ctx, size: size)
         }
+    }
+}
+
+private enum EarDoodleThumbnailRenderer {
+    static func draw(context: GraphicsContext, size: CGSize) {
+        let W = size.width
+        let H = size.height
+        let ink = DoodleStyle.ink
+
+        context.stroke(Rough.arc(from: CGPoint(x: W * 0.25, y: H * 0.16),
+                                 to: CGPoint(x: W * 0.23, y: H * 0.86),
+                                 bulge: -34,
+                                 seed: 701),
+                       with: .color(DoodleStyle.inkSoft), style: .doodle)
+
+        var outer = Path()
+        outer.move(to: CGPoint(x: W * 0.45, y: H * 0.13))
+        outer.addCurve(to: CGPoint(x: W * 0.74, y: H * 0.30),
+                       control1: CGPoint(x: W * 0.61, y: H * 0.10),
+                       control2: CGPoint(x: W * 0.72, y: H * 0.17))
+        outer.addCurve(to: CGPoint(x: W * 0.73, y: H * 0.61),
+                       control1: CGPoint(x: W * 0.78, y: H * 0.43),
+                       control2: CGPoint(x: W * 0.78, y: H * 0.53))
+        outer.addCurve(to: CGPoint(x: W * 0.55, y: H * 0.74),
+                       control1: CGPoint(x: W * 0.69, y: H * 0.70),
+                       control2: CGPoint(x: W * 0.62, y: H * 0.74))
+        outer.addCurve(to: CGPoint(x: W * 0.38, y: H * 0.67),
+                       control1: CGPoint(x: W * 0.48, y: H * 0.74),
+                       control2: CGPoint(x: W * 0.41, y: H * 0.71))
+        outer.addCurve(to: CGPoint(x: W * 0.32, y: H * 0.36),
+                       control1: CGPoint(x: W * 0.29, y: H * 0.55),
+                       control2: CGPoint(x: W * 0.29, y: H * 0.44))
+        outer.addCurve(to: CGPoint(x: W * 0.45, y: H * 0.13),
+                       control1: CGPoint(x: W * 0.34, y: H * 0.24),
+                       control2: CGPoint(x: W * 0.38, y: H * 0.16))
+        context.stroke(outer, with: .color(ink), style: .doodleBold)
+
+        var inner = Path()
+        inner.move(to: CGPoint(x: W * 0.50, y: H * 0.24))
+        inner.addCurve(to: CGPoint(x: W * 0.61, y: H * 0.52),
+                       control1: CGPoint(x: W * 0.64, y: H * 0.25),
+                       control2: CGPoint(x: W * 0.68, y: H * 0.40))
+        inner.addCurve(to: CGPoint(x: W * 0.49, y: H * 0.62),
+                       control1: CGPoint(x: W * 0.58, y: H * 0.58),
+                       control2: CGPoint(x: W * 0.54, y: H * 0.62))
+        inner.addCurve(to: CGPoint(x: W * 0.44, y: H * 0.42),
+                       control1: CGPoint(x: W * 0.42, y: H * 0.56),
+                       control2: CGPoint(x: W * 0.41, y: H * 0.48))
+        context.stroke(inner, with: .color(ink), style: .doodle)
+
+        var fold = Path()
+        fold.move(to: CGPoint(x: W * 0.50, y: H * 0.38))
+        fold.addQuadCurve(to: CGPoint(x: W * 0.57, y: H * 0.50),
+                          control: CGPoint(x: W * 0.62, y: H * 0.39))
+        fold.addQuadCurve(to: CGPoint(x: W * 0.48, y: H * 0.56),
+                          control: CGPoint(x: W * 0.52, y: H * 0.58))
+        context.stroke(fold, with: .color(ink), style: .doodleThin)
+
+        let lobeRect = CGRect(x: W * 0.39, y: H * 0.66, width: W * 0.32, height: H * 0.24)
+        context.fill(Rough.ellipse(in: lobeRect, wobble: 1.8, points: 30, seed: 731),
+                     with: .color(DoodleStyle.blush.opacity(0.78)))
+        context.stroke(Rough.ellipse(in: lobeRect, wobble: 1.8, points: 30, seed: 731),
+                       with: .color(ink), style: .doodleBold)
+        context.fill(Rough.ellipse(in: CGRect(x: W * 0.55, y: H * 0.76, width: W * 0.035, height: W * 0.035),
+                                    wobble: 0.4, seed: 741),
+                     with: .color(ink.opacity(0.9)))
     }
 }
 
