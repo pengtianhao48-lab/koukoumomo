@@ -1,5 +1,5 @@
-import AudioToolbox
 import AVFoundation
+import AudioToolbox
 import Combine
 import Foundation
 
@@ -20,6 +20,17 @@ final class AudioManager {
 
     private var lastContinuousAt = Date.distantPast
     private var lastPenWindAt = Date.distantPast
+    private var players: [AVAudioPlayer] = []
+
+    private let soundPaths: [SystemSoundID: [String]] = [
+        1104: ["/System/Library/Audio/UISounds/Tock.caf", "/System/Library/Audio/UISounds/tock.caf"],
+        1105: ["/System/Library/Audio/UISounds/Tock.caf", "/System/Library/Audio/UISounds/tock.caf"],
+        1106: ["/System/Library/Audio/UISounds/ReceivedMessage.caf"],
+        1155: ["/System/Library/Audio/UISounds/Swish.caf", "/System/Library/Audio/UISounds/sms-received1.caf"],
+        1156: ["/System/Library/Audio/UISounds/Pop.caf", "/System/Library/Audio/UISounds/sms-received2.caf"],
+        1157: ["/System/Library/Audio/UISounds/Swish.caf", "/System/Library/Audio/UISounds/sms-received3.caf"],
+        1306: ["/System/Library/Audio/UISounds/Modern/sms-received1.caf", "/System/Library/Audio/UISounds/sms-received1.caf"]
+    ]
 
     private init() {
         let session = AVAudioSession.sharedInstance()
@@ -72,6 +83,22 @@ final class AudioManager {
 
     private func play(_ id: SystemSoundID) {
         if Preferences.shared.isMuted { return }
+        if playSystemFile(for: id) { return }
         AudioServicesPlaySystemSound(id)
+    }
+
+    private func playSystemFile(for id: SystemSoundID) -> Bool {
+        guard let paths = soundPaths[id] else { return false }
+        players.removeAll { !$0.isPlaying }
+        for path in paths where FileManager.default.fileExists(atPath: path) {
+            let url = URL(fileURLWithPath: path)
+            guard let player = try? AVAudioPlayer(contentsOf: url) else { continue }
+            player.volume = 0.55
+            player.prepareToPlay()
+            player.play()
+            players.append(player)
+            return true
+        }
+        return false
     }
 }

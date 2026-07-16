@@ -116,7 +116,7 @@ private enum NoseDoodleRenderer {
         let eyeY = face.midY - face.height * 0.14
         let leftEyeC = CGPoint(x: face.midX - face.width * 0.19, y: eyeY)
         let rightEyeC = CGPoint(x: face.midX + face.width * 0.19, y: eyeY)
-        let eyeHeight: CGFloat = 9 + 3 * CGFloat(sin(time * 0.6)) - expression * 7
+        let eyeHeight: CGFloat = 9 + 3 * CGFloat(sin(time * 0.6)) - expression * 4.2
         for (idx, c) in [leftEyeC, rightEyeC].enumerated() {
             let squint = max(1.8, eyeHeight)
             let rect = CGRect(x: c.x - 7, y: c.y - squint / 2, width: 14, height: squint)

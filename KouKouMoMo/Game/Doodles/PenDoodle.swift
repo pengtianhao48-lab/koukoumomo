@@ -66,7 +66,7 @@ struct PenDoodle: View {
 
         let speed = dragSpeed(value)
         if speed > 5 {
-            AudioManager.shared.penSpinWind(speed: min(1, Double(speed) * 4.2 / maxAV))
+            playMotionSound(normalizedSpeed: Double(speed) * 4.2 / maxAV)
         }
         angle = fingerAngle
         angularVelocity = 0
@@ -136,7 +136,7 @@ struct PenDoodle: View {
             return
         }
 
-        AudioManager.shared.penSpinWind(speed: abs(angularVelocity) / maxAV)
+        playMotionSound(normalizedSpeed: abs(angularVelocity) / maxAV)
         if abs(angularVelocity) > 180, abs(angle - (trailSamples.last ?? previousAngle)) > 12 {
             var updated = trailSamples
             updated.append(angle)
@@ -151,6 +151,10 @@ struct PenDoodle: View {
         guard let previous = lastDragPoint, let previousTime = lastDragTime else { return 0 }
         let dt = max(0.001, value.time.timeIntervalSince(previousTime))
         return hypot(value.location.x - previous.x, value.location.y - previous.y) / dt
+    }
+
+    private func playMotionSound(normalizedSpeed: Double) {
+        AudioManager.shared.penSpinWind(speed: min(1, max(0, normalizedSpeed)))
     }
 
     private func flickDirection(_ value: DragGesture.Value, size: CGSize) -> Double {
