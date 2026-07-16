@@ -64,6 +64,10 @@ struct PenDoodle: View {
             return
         }
 
+        let speed = dragSpeed(value)
+        if speed > 5 {
+            AudioManager.shared.penSpinWind(speed: min(1, Double(speed) * 4.2 / maxAV))
+        }
         angle = fingerAngle
         angularVelocity = 0
         lastDragPoint = point

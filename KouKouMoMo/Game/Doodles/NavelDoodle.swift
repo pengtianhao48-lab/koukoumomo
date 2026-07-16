@@ -111,11 +111,7 @@ private enum NavelDoodleRenderer {
         context.stroke(Rough.arc(from: sh2A, to: sh2B, bulge: 14, seed: 213),
                        with: .color(DoodleStyle.inkSoft.opacity(0.3)), style: .doodleThin)
 
-        var center = CGPoint(x: baseBellyRect.midX, y: baseBellyRect.midY + baseBellyRect.height * 0.04)
-        if progress >= 0.99 && isDragging {
-            center.x += CGFloat(cos(time * 23)) * 1.5
-            center.y += CGFloat(sin(time * 26)) * 1.5
-        }
+        let center = CGPoint(x: baseBellyRect.midX, y: baseBellyRect.midY + baseBellyRect.height * 0.04)
         let navelW: CGFloat = 60
         let navelH: CGFloat = 44
         let rimRect = CGRect(x: center.x - navelW/2, y: center.y - navelH/2, width: navelW, height: navelH)
@@ -125,9 +121,13 @@ private enum NavelDoodleRenderer {
         context.fill(Rough.ellipse(in: holeRect, wobble: 1.4, points: 32, seed: 215),
                      with: .color(DoodleStyle.ink.opacity(0.15 + progress * 0.20)))
 
+        var dotCenter = center
+        if progress >= 0.99 && isDragging {
+            dotCenter.x += CGFloat(cos(time * 23)) * 1.5
+            dotCenter.y += CGFloat(sin(time * 26)) * 1.5
+        }
         var coreCtx = context
-        coreCtx.translateBy(x: center.x, y: center.y + 1)
-        coreCtx.rotate(by: .degrees(progress * 620 + sin(time * 2.4) * 8))
+        coreCtx.translateBy(x: dotCenter.x, y: dotCenter.y + 1)
         var beanPath = Path()
         beanPath.move(to: CGPoint(x: 0, y: -14))
         beanPath.addCurve(to: CGPoint(x: 6, y: 0), control1: CGPoint(x: 6, y: -12), control2: CGPoint(x: 7, y: -6))
@@ -159,13 +159,13 @@ private enum NavelDoodleRenderer {
 
         let orbitR: CGFloat = navelW * 0.42
         let spin = time * 3.2 + axis * 6
-        let defaultTip = CGPoint(x: center.x + cos(spin) * orbitR, y: center.y + sin(spin) * orbitR * 0.72)
+        let defaultTip = CGPoint(x: center.x + CGFloat(cos(spin)) * orbitR, y: center.y + CGFloat(sin(spin)) * orbitR * 0.72)
         let tipCenter = clamped(fingerPoint ?? defaultTip,
                                 to: center,
                                 radiusX: navelW * 0.46,
                                 radiusY: navelH * 0.42)
 
-        let baseX = bellyRect.maxX - 30
+        let baseX = baseBellyRect.maxX - 30
         let baseY = H * 0.98
         let fingerW: CGFloat = 30
         var trunk = Path()
