@@ -63,7 +63,7 @@ final class ToyViewModel: ObservableObject {
         // gentle pull beats for the ear. Nose is the only mode that still terminates with a banner.
         switch mode {
         case .nosePick, .navelPoke:
-            haptics.orbitTick(intensity: max(progress * 0.4, event.velocity))
+            break // local doodle gestures fire friction haptics only inside the active area
         case .earLobe:
             if event.velocity > 0.25 {
                 haptics.earPullBeat(strength: min(1, event.velocity))

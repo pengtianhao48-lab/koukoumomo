@@ -78,6 +78,33 @@ final class HapticManager {
         }
     }
 
+    func frictionTick(intensity: Double, minimumInterval: TimeInterval = 0.06) {
+        guard Date().timeIntervalSince(lastProgressAt) > minimumInterval else { return }
+        lastProgressAt = Date()
+        light.impactOccurred(intensity: CGFloat((0.25 + intensity * 0.65).clamped(to: 0.25...1.0)))
+        light.prepare()
+    }
+
+    func penHalfTurnTick(intensity: Double) {
+        medium.impactOccurred(intensity: CGFloat((0.55 + intensity * 0.35).clamped(to: 0.55...1.0)))
+        medium.prepare()
+    }
+
+    func penInertiaStart() {
+        rigid.impactOccurred(intensity: 0.95)
+        rigid.prepare()
+    }
+
+    func penCaught() {
+        medium.impactOccurred(intensity: 0.85)
+        medium.prepare()
+    }
+
+    func penStopped() {
+        heavy.impactOccurred(intensity: 0.9)
+        heavy.prepare()
+    }
+
     /// A single 360° pen-spin tick.
     func spinLoop() {
         medium.impactOccurred(intensity: 0.6)
