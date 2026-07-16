@@ -39,7 +39,10 @@ struct NavelDoodle: View {
     }
 
     private func handleDrag(_ value: DragGesture.Value, size: CGSize) {
-        isDragging = true
+        if !isDragging {
+            isDragging = true
+            AudioManager.shared.start(for: viewModel.mode)
+        }
         let now = value.time
         defer {
             lastDragPoint = value.location
@@ -57,6 +60,7 @@ struct NavelDoodle: View {
                                      value.translation.height - previousTranslation.height)
         if translationDelta > 0.7 {
             viewModel.progress = min(1.0, viewModel.progress + Double(translationDelta) / 800.0)
+            AudioManager.shared.continuous(for: viewModel.mode, progress: viewModel.progress)
         }
         let speed = distance / dt
         fingerPoint = value.location
