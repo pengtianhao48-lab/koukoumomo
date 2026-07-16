@@ -58,10 +58,17 @@ struct BubblesDoodle: View {
     }
 
     private func handleTap(at p: CGPoint, viewSize: CGSize, time: TimeInterval) {
-        // While a burst is still playing and before the canvas has moved, ignore taps to avoid
-        // overlapping pending moves and wrong-position bursts.
-        if pendingOffset != nil { return }
-        if let poppedAt, time - burstStart < burstDuration { return }
+        // Aggressive responsiveness: if tapping very fast (< 150ms since last accepted),
+        // skip the animation lock and respond immediately.
+        let interval = lastAcceptedTapTime == nil ? 9.0 : (time - lastAcceptedTapTime!)
+        let isVeryFast = interval < 0.15
+
+        if !isVeryFast {
+            // While a burst is still playing and before the canvas has moved, ignore taps to avoid
+            // overlapping pending moves and wrong-position bursts.
+            if pendingOffset != nil { return }
+            if let poppedAt, time - burstStart < burstDuration { return }
+        }
         // Nearest unpopped bubble to tap point.
         var bestIdx = -1
         var bestD: CGFloat = .greatestFiniteMagnitude
@@ -123,21 +130,22 @@ struct BubblesDoodle: View {
         }
         let average = recentTapIntervals.reduce(0, +) / Double(recentTapIntervals.count)
         let target: TimeInterval
-        if average < 0.20 {
-            target = 0.13
-        } else if average < 0.40 {
-            target = 0.22
+        if average < 0.15 {
+            target = 0.08
+        } else if average < 0.30 {
+            target = 0.175
         } else {
             target = 0.35
         }
-        burstDuration = burstDuration * 0.45 + target * 0.55
+        burstDuration = burstDuration * 0.40 + target * 0.60
     }
 
     private func moveCanvasIfBurstFinished(now: TimeInterval) {
         guard let target = pendingOffset else { return }
         guard now - pendingMoveStart >= burstDuration else { return }
         pendingOffset = nil
-        withAnimation(.spring(response: 0.7, dampingFraction: 0.80)) {
+        // Use a duration-based animation as requested to ensure dynamic speed is respected.
+        withAnimation(.easeInOut(duration: burstDuration * 1.2)) {
             offset = target
         }
     }

@@ -8,6 +8,7 @@ struct NoseDoodle: View {
     @State private var lastDragPoint: CGPoint?
     @State private var lastDragTime: Date?
     @State private var lastTranslation: CGSize?
+    @State private var isDragging = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -21,7 +22,8 @@ struct NoseDoodle: View {
                                             isCompleting: viewModel.isCompleting,
                                             completionTick: viewModel.completionTick,
                                             time: now,
-                                            fingerPoint: fingerPoint)
+                                            fingerPoint: fingerPoint,
+                                            isDragging: isDragging)
                 }
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 0, coordinateSpace: .local)
@@ -30,6 +32,7 @@ struct NoseDoodle: View {
                             lastDragPoint = nil
                             lastDragTime = nil
                             lastTranslation = nil
+                            isDragging = false
                         }
                 )
             }
@@ -37,6 +40,7 @@ struct NoseDoodle: View {
     }
 
     private func handleDrag(_ value: DragGesture.Value) {
+        isDragging = true
         let now = value.time
         defer {
             lastDragPoint = value.location
@@ -69,7 +73,8 @@ struct NoseDoodleThumbnail: View {
             NoseDoodleRenderer.draw(context: ctx, size: size,
                                     progress: 0.3, velocity: 0, axis: 0,
                                     isCompleting: false, completionTick: 0, time: 0,
-                                    fingerPoint: nil)
+                                    fingerPoint: nil,
+                                    isDragging: false)
         }
     }
 }
@@ -78,7 +83,7 @@ private enum NoseDoodleRenderer {
     static func draw(context: GraphicsContext, size: CGSize,
                      progress: Double, velocity: Double, axis: Double,
                      isCompleting: Bool, completionTick: Int, time: TimeInterval,
-                     fingerPoint: CGPoint?) {
+                     fingerPoint: CGPoint?, isDragging: Bool) {
         let W = size.width
         let H = size.height
         let expression = CGFloat(progress.clamped(to: 0...1))
@@ -116,7 +121,10 @@ private enum NoseDoodleRenderer {
                            with: .color(DoodleStyle.ink.opacity(0.70)), style: .doodleThin)
         }
         // Eyebrows: normal → furrow inward
-        let browTilt = expression * 20
+        var browTilt = expression * 14 // Max reduced to 70% of 20
+        if progress >= 0.99 && isDragging {
+            browTilt += CGFloat(sin(time * 24)) * 1.5
+        }
         for (i, cx) in [face.midX - face.width * 0.19, face.midX + face.width * 0.19].enumerated() {
             let sign: CGFloat = i == 0 ? 1 : -1
             let start = CGPoint(x: cx - 14, y: eyeY - 18 + browTilt * sign)
@@ -203,9 +211,13 @@ private enum NoseDoodleRenderer {
         }
 
         // Mouth
-        let mouthCenter = CGPoint(x: face.midX, y: face.maxY - face.height * 0.14 + expression * 4)
-        let mouthWidth: CGFloat = 54 + (isCompleting ? 28 : expression * 28)
-        let mouthBulge: CGFloat = isCompleting ? 32 : 8 + expression * 28
+        var mouthCenter = CGPoint(x: face.midX, y: face.maxY - face.height * 0.14 + expression * 4)
+        let mouthWidth: CGFloat = 54 + (isCompleting ? 28 : expression * 19.6) // Max width variation 28 * 0.7 = 19.6
+        var mouthBulge: CGFloat = isCompleting ? 32 : 8 + expression * 19.6 // Max bulge variation 28 * 0.7 = 19.6
+        if progress >= 0.99 && isDragging {
+            mouthCenter.y += CGFloat(sin(time * 20)) * 1.5
+            mouthBulge += CGFloat(cos(time * 22)) * 1.5
+        }
         context.stroke(Rough.arc(
             from: CGPoint(x: mouthCenter.x - mouthWidth, y: mouthCenter.y),
             to: CGPoint(x: mouthCenter.x + mouthWidth, y: mouthCenter.y - expression * 3),

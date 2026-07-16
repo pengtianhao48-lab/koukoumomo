@@ -6,6 +6,7 @@ struct NavelDoodle: View {
     @State private var lastDragPoint: CGPoint?
     @State private var lastDragTime: Date?
     @State private var lastTranslation: CGSize?
+    @State private var isDragging = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -17,7 +18,8 @@ struct NavelDoodle: View {
                                              axis: viewModel.axis,
                                              velocity: viewModel.velocity,
                                              time: time,
-                                             fingerPoint: fingerPoint)
+                                             fingerPoint: fingerPoint,
+                                             isDragging: isDragging)
                 }
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 0, coordinateSpace: .local)
@@ -26,6 +28,7 @@ struct NavelDoodle: View {
                             lastDragPoint = nil
                             lastDragTime = nil
                             lastTranslation = nil
+                            isDragging = false
                         }
                 )
             }
@@ -33,6 +36,7 @@ struct NavelDoodle: View {
     }
 
     private func handleDrag(_ value: DragGesture.Value, size: CGSize) {
+        isDragging = true
         let now = value.time
         defer {
             lastDragPoint = value.location
@@ -62,7 +66,7 @@ struct NavelDoodle: View {
 struct NavelDoodleThumbnail: View {
     var body: some View {
         Canvas { ctx, size in
-            NavelDoodleRenderer.draw(context: ctx, size: size, progress: 0, axis: 0, velocity: 0, time: 0, fingerPoint: nil)
+            NavelDoodleRenderer.draw(context: ctx, size: size, progress: 0, axis: 0, velocity: 0, time: 0, fingerPoint: nil, isDragging: false)
         }
     }
 }
@@ -70,12 +74,18 @@ struct NavelDoodleThumbnail: View {
 private enum NavelDoodleRenderer {
     static func draw(context: GraphicsContext, size: CGSize,
                      progress: Double, axis: Double, velocity: Double,
-                     time: TimeInterval, fingerPoint: CGPoint?) {
+                     time: TimeInterval, fingerPoint: CGPoint?, isDragging: Bool) {
         let W = size.width
         let H = size.height
         let compression = 1 - CGFloat(progress) * 0.10
         let sink = CGFloat(progress) * 8
-        let bellyRect = CGRect(x: W * 0.08, y: H * 0.20 + sink, width: W * 0.84, height: H * 0.70 * compression)
+        var bellyRect = CGRect(x: W * 0.08, y: H * 0.20 + sink, width: W * 0.84, height: H * 0.70 * compression)
+        if progress >= 0.99 && isDragging {
+            bellyRect.origin.x += CGFloat(sin(time * 25)) * 2.2
+            bellyRect.origin.y += CGFloat(cos(time * 21)) * 2.2
+            bellyRect.size.width += CGFloat(sin(time * 18)) * 3.0
+            bellyRect.size.height += CGFloat(cos(time * 20)) * 3.0
+        }
         context.stroke(Rough.ellipse(in: bellyRect, wobble: 2.4, points: 46, seed: 210),
                        with: .color(DoodleStyle.ink), style: .doodleBold)
 
