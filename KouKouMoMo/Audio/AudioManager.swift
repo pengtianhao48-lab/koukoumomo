@@ -85,7 +85,7 @@ final class AudioManager {
 
     private func preloadPlayers() {
         for (id, name) in soundFiles where players[id] == nil {
-            guard let url = Bundle.main.url(forResource: name, withExtension: "wav", subdirectory: "Sounds") else { continue }
+            guard let url = Bundle.main.url(forResource: name, withExtension: "caf", subdirectory: "Sounds") else { continue }
             guard let player = try? AVAudioPlayer(contentsOf: url) else { continue }
             player.prepareToPlay()
             players[id] = player
