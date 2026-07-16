@@ -71,10 +71,6 @@ struct PenDoodle: View {
             return
         }
 
-        let speed = dragSpeed(value)
-        if speed > 5 {
-            playMotionSound(normalizedSpeed: Double(speed) * 4.2 / maxAV)
-        }
         angle = fingerAngle
         angularVelocity = 0
         lastDragPoint = point
