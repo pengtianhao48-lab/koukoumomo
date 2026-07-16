@@ -100,64 +100,79 @@ struct NoseDoodleThumbnail: View {
             let H = size.height
             let ink = DoodleStyle.ink
 
-            let faceRect = CGRect(x: W * 0.15, y: H * 0.09, width: W * 0.70, height: H * 0.73)
-            ctx.fill(Rough.ellipse(in: faceRect, wobble: W * 0.007, points: 30, seed: 110),
-                     with: .color(DoodleStyle.paperShadow.opacity(0.20)))
-            ctx.stroke(Rough.ellipse(in: faceRect, wobble: W * 0.007, points: 30, seed: 110),
+            let faceRect = CGRect(x: W * 0.12, y: H * 0.06, width: W * 0.76, height: H * 0.78)
+            ctx.fill(Rough.ellipse(in: faceRect, wobble: W * 0.008, points: 32, seed: 110),
+                     with: .color(DoodleStyle.paperShadow.opacity(0.18)))
+            ctx.stroke(Rough.ellipse(in: faceRect, wobble: W * 0.008, points: 32, seed: 110),
                        with: .color(ink), style: .doodleBold)
 
-            let leftEye = CGRect(x: W * 0.34, y: H * 0.33, width: W * 0.035, height: H * 0.045)
-            let rightEye = CGRect(x: W * 0.61, y: H * 0.33, width: W * 0.035, height: H * 0.045)
-            ctx.fill(Rough.ellipse(in: leftEye, wobble: W * 0.002, seed: 111), with: .color(ink))
-            ctx.fill(Rough.ellipse(in: rightEye, wobble: W * 0.002, seed: 112), with: .color(ink))
+            ctx.stroke(Rough.arc(from: CGPoint(x: W * 0.30, y: H * 0.27),
+                                 to: CGPoint(x: W * 0.41, y: H * 0.25),
+                                 bulge: -W * 0.035,
+                                 seed: 111),
+                       with: .color(ink), style: .doodle)
+            ctx.stroke(Rough.arc(from: CGPoint(x: W * 0.58, y: H * 0.25),
+                                 to: CGPoint(x: W * 0.70, y: H * 0.27),
+                                 bulge: W * 0.035,
+                                 seed: 112),
+                       with: .color(ink), style: .doodle)
 
-            let leftBlush = CGRect(x: W * 0.25, y: H * 0.48, width: W * 0.13, height: H * 0.055)
-            let rightBlush = CGRect(x: W * 0.62, y: H * 0.48, width: W * 0.13, height: H * 0.055)
-            ctx.fill(Rough.ellipse(in: leftBlush, wobble: W * 0.004, seed: 113), with: .color(DoodleStyle.blush.opacity(0.5)))
-            ctx.fill(Rough.ellipse(in: rightBlush, wobble: W * 0.004, seed: 114), with: .color(DoodleStyle.blush.opacity(0.5)))
-
-            var nose = Path()
-            nose.move(to: CGPoint(x: W * 0.50, y: H * 0.39))
-            nose.addLine(to: CGPoint(x: W * 0.44, y: H * 0.55))
-            nose.addQuadCurve(to: CGPoint(x: W * 0.55, y: H * 0.55),
-                              control: CGPoint(x: W * 0.50, y: H * 0.60))
-            nose.closeSubpath()
-            ctx.stroke(nose, with: .color(ink), style: .doodle)
-
-            let nostril = CGRect(x: W * 0.505, y: H * 0.505, width: W * 0.070, height: H * 0.042)
-            ctx.fill(Rough.ellipse(in: nostril, wobble: W * 0.0025, seed: 115), with: .color(DoodleStyle.inkSoft.opacity(0.22)))
-            ctx.stroke(Rough.ellipse(in: nostril, wobble: W * 0.0025, seed: 115), with: .color(ink), style: .doodle)
-
-            var mouth = Path()
-            mouth.move(to: CGPoint(x: W * 0.42, y: H * 0.66))
-            mouth.addQuadCurve(to: CGPoint(x: W * 0.58, y: H * 0.66),
-                               control: CGPoint(x: W * 0.50, y: H * 0.70))
-            ctx.stroke(mouth, with: .color(ink), style: .doodleThin)
-
-            let fingerX = W * 0.54
-            let fingerTop = H * 0.51
-            let fingerW = W * 0.045
-            var finger = Path()
-            finger.move(to: CGPoint(x: fingerX - fingerW * 0.5, y: H * 0.88))
-            finger.addLine(to: CGPoint(x: fingerX - fingerW * 0.5, y: fingerTop + fingerW * 0.5))
-            finger.addArc(center: CGPoint(x: fingerX, y: fingerTop + fingerW * 0.5),
-                          radius: fingerW * 0.5,
-                          startAngle: .degrees(180),
-                          endAngle: .degrees(0),
-                          clockwise: false)
-            finger.addLine(to: CGPoint(x: fingerX + fingerW * 0.5, y: H * 0.88))
-            finger.closeSubpath()
-
-            ctx.fill(finger, with: .color(DoodleStyle.sunshine.opacity(0.34)))
-            ctx.stroke(finger, with: .color(ink), style: .doodle)
-
-            let nailW = fingerW * 0.75
-            let nailH = fingerW * 0.55
-            ctx.stroke(Rough.arc(from: CGPoint(x: fingerX - nailW * 0.5, y: fingerTop + nailH * 1.2),
-                                 to: CGPoint(x: fingerX + nailW * 0.5, y: fingerTop + nailH * 1.2),
-                                 bulge: -nailH,
+            let leftEye = CGRect(x: W * 0.34, y: H * 0.34, width: W * 0.045, height: H * 0.032)
+            let rightEye = CGRect(x: W * 0.63, y: H * 0.34, width: W * 0.045, height: H * 0.032)
+            ctx.fill(Rough.ellipse(in: leftEye, wobble: W * 0.002, seed: 113), with: .color(ink))
+            ctx.fill(Rough.ellipse(in: rightEye, wobble: W * 0.002, seed: 114), with: .color(ink))
+            ctx.stroke(Rough.arc(from: CGPoint(x: W * 0.31, y: H * 0.40),
+                                 to: CGPoint(x: W * 0.41, y: H * 0.40),
+                                 bulge: W * 0.018,
+                                 seed: 115),
+                       with: .color(DoodleStyle.inkSoft), style: .doodleThin)
+            ctx.stroke(Rough.arc(from: CGPoint(x: W * 0.60, y: H * 0.40),
+                                 to: CGPoint(x: W * 0.70, y: H * 0.40),
+                                 bulge: W * 0.018,
                                  seed: 116),
                        with: .color(DoodleStyle.inkSoft), style: .doodleThin)
+
+            let leftBlush = CGRect(x: W * 0.22, y: H * 0.49, width: W * 0.14, height: H * 0.060)
+            let rightBlush = CGRect(x: W * 0.64, y: H * 0.49, width: W * 0.14, height: H * 0.060)
+            ctx.fill(Rough.ellipse(in: leftBlush, wobble: W * 0.004, seed: 117), with: .color(DoodleStyle.blush.opacity(0.5)))
+            ctx.fill(Rough.ellipse(in: rightBlush, wobble: W * 0.004, seed: 118), with: .color(DoodleStyle.blush.opacity(0.5)))
+
+            var finger = Path()
+            let p0 = CGPoint(x: W * 0.44, y: H * 1.02)
+            let p1 = CGPoint(x: W * 0.38, y: H * 0.52)
+            let dx = W * 0.08
+            finger.move(to: CGPoint(x: p0.x - dx * 0.48, y: p0.y))
+            finger.addLine(to: CGPoint(x: p1.x - dx * 0.45, y: p1.y + H * 0.035))
+            finger.addQuadCurve(to: CGPoint(x: p1.x + dx * 0.45, y: p1.y + H * 0.005),
+                                control: CGPoint(x: p1.x, y: p1.y - H * 0.040))
+            finger.addLine(to: CGPoint(x: p0.x + dx * 0.48, y: p0.y))
+            finger.closeSubpath()
+            ctx.fill(finger, with: .color(DoodleStyle.sunshine.opacity(0.34)))
+            ctx.stroke(finger, with: .color(ink), style: .doodle)
+            ctx.stroke(Rough.arc(from: CGPoint(x: W * 0.365, y: H * 0.565),
+                                 to: CGPoint(x: W * 0.425, y: H * 0.548),
+                                 bulge: -W * 0.018,
+                                 seed: 119),
+                       with: .color(DoodleStyle.inkSoft), style: .doodleThin)
+
+            var nose = Path()
+            nose.move(to: CGPoint(x: W * 0.51, y: H * 0.39))
+            nose.addLine(to: CGPoint(x: W * 0.43, y: H * 0.55))
+            nose.addQuadCurve(to: CGPoint(x: W * 0.57, y: H * 0.55),
+                              control: CGPoint(x: W * 0.50, y: H * 0.61))
+            nose.closeSubpath()
+            ctx.stroke(nose, with: .color(ink), style: .doodleBold)
+
+            let leftNostril = CGRect(x: W * 0.395, y: H * 0.505, width: W * 0.062, height: H * 0.038)
+            let rightNostril = CGRect(x: W * 0.532, y: H * 0.515, width: W * 0.042, height: H * 0.026)
+            ctx.fill(Rough.ellipse(in: leftNostril, wobble: W * 0.002, seed: 120), with: .color(ink))
+            ctx.fill(Rough.ellipse(in: rightNostril, wobble: W * 0.002, seed: 121), with: .color(ink.opacity(0.72)))
+
+            ctx.stroke(Rough.arc(from: CGPoint(x: W * 0.40, y: H * 0.66),
+                                 to: CGPoint(x: W * 0.59, y: H * 0.66),
+                                 bulge: W * 0.040,
+                                 seed: 122),
+                       with: .color(ink), style: .doodle)
         }
     }
 }
