@@ -89,7 +89,6 @@ KouKouMoMo/
 ├── GestureEngine/
 │   ├── GestureEngine.swift            5 kind → Progress(0~1) + velocity + axis
 │   └── GestureSurface.swift           Drag + Tap 覆盖全屏
-├── Audio/AudioManager.swift           系统音 · 节流
 ├── Haptics/HapticManager.swift        UIImpact / UINotification · 节流
 ├── Components/
 │   ├── DoodleCloseButton.swift        手绘 × 按钮

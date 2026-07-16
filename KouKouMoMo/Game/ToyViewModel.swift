@@ -17,7 +17,6 @@ final class ToyViewModel: ObservableObject {
     /// even if the accumulated progress stays low.
     @Published var tapTick: Int = 0
 
-    private let audio = AudioManager.shared
     private let haptics = HapticManager.shared
     private var isLocked = false
 
@@ -36,7 +35,6 @@ final class ToyViewModel: ObservableObject {
     private func startPlaying() {
         guard !isLocked, state == .idle else { return }
         state = .fingerDown
-        audio.start(for: mode)
         haptics.start()
     }
 
@@ -57,8 +55,6 @@ final class ToyViewModel: ObservableObject {
         if mode == .bubbleWrap, event.velocity > 0 {
             tapTick &+= 1
         }
-
-        audio.continuous(for: mode, progress: progress)
         // Per-mode haptic textures — orbit tick for the rotating toys, chomp beats for the finger,
         // gentle pull beats for the ear. Nose is the only mode that still terminates with a banner.
         switch mode {
@@ -98,7 +94,6 @@ final class ToyViewModel: ObservableObject {
         isCompleting = true
         progress = 1
 
-        audio.completion(for: mode)
         haptics.completion()
 
         Task { [weak self] in

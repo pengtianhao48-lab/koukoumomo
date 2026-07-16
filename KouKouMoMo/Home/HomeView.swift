@@ -26,7 +26,7 @@ struct HomeView: View {
         .tint(DoodleStyle.ink)
         .sheet(isPresented: $isShowingSettings) {
             DoodleSettingsSheet()
-                .presentationDetents([.height(310)])
+                .presentationDetents([.height(250)])
                 .presentationDragIndicator(.hidden)
         }
     }
@@ -118,7 +118,6 @@ private struct DoodleSettingsGear: View {
 private struct DoodleSettingsSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
-    @ObservedObject private var prefs = Preferences.shared
 
     private var version: String {
         let raw = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0"
@@ -147,18 +146,6 @@ private struct DoodleSettingsSheet: View {
                     DoodleSettingsRow(title: String(localized: "settings.contact"), value: "pengtianhao@vip.qq.com")
                 }
                 .buttonStyle(.plain)
-                DoodleDivider()
-                    .frame(height: 12)
-                Toggle(isOn: $prefs.isMuted) {
-                    Text("settings.mute")
-                        .font(DoodleStyle.mono(17, .bold))
-                        .foregroundStyle(DoodleStyle.ink)
-                }
-                .toggleStyle(.switch)
-                .tint(DoodleStyle.ink)
-                .padding(.horizontal, 26)
-                .padding(.vertical, 12)
-
                 Button {
                     dismiss()
                 } label: {

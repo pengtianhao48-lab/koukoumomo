@@ -38,12 +38,6 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "联系作者" } }
       }
     },
-    "settings.mute" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Mute" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "静音" } }
-      }
-    },
     "app_name" : {
       "comment" : "App name shown on the home screen.",
       "localizations" : {

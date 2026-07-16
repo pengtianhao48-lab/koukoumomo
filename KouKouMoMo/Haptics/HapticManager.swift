@@ -1,7 +1,5 @@
 import UIKit
 
-/// Central haptic feedback. Different toys expose different textures — orbit taps, chomp beats,
-/// bubble pops, spin ticks — so the phone feel matches the on-screen action.
 final class HapticManager {
     static let shared = HapticManager()
 
@@ -14,112 +12,140 @@ final class HapticManager {
 
     private var lastProgressAt = Date.distantPast
     private var lastBeatAt = Date.distantPast
+    private var lastPenAt = Date.distantPast
+    private var bubbleCombo = 0
+    private var lastBubbleAt = Date.distantPast
 
     private init() {
         [light, soft, medium, heavy, rigid].forEach { $0.prepare() }
         success.prepare()
     }
 
-    // Legacy — kept so existing callers keep working.
     func start() {
+        soft.prepare()
         soft.impactOccurred(intensity: 0.35)
         soft.prepare()
     }
+
     func progress(intensity: Double) {
-        guard Date().timeIntervalSince(lastProgressAt) > 0.12 else { return }
+        guard Date().timeIntervalSince(lastProgressAt) >= 0.05 else { return }
         lastProgressAt = Date()
-        light.impactOccurred(intensity: CGFloat(0.22 + intensity * 0.38))
+        light.prepare()
+        light.impactOccurred(intensity: CGFloat((0.22 + intensity * 0.50).clamped(to: 0.22...0.75)))
         light.prepare()
     }
+
     func completion() {
+        success.prepare()
         success.notificationOccurred(.success)
         success.prepare()
     }
 
-    // MARK: - Mode-specific textures
-
-    /// A quick low-intensity beat used for continuous orbits (nose/navel).
     func orbitTick(intensity: Double) {
-        guard Date().timeIntervalSince(lastProgressAt) > 0.14 else { return }
-        lastProgressAt = Date()
-        light.impactOccurred(intensity: CGFloat(0.28 + intensity * 0.35))
-        light.prepare()
+        frictionTick(intensity: intensity, minimumInterval: 0.05)
     }
 
-    /// Ear-lobe pull-down beat (medium impact when it bottoms out).
     func earPullBeat(strength: Double) {
-        guard Date().timeIntervalSince(lastBeatAt) > 0.18 else { return }
+        guard Date().timeIntervalSince(lastBeatAt) >= 0.08 else { return }
         lastBeatAt = Date()
-        medium.impactOccurred(intensity: CGFloat(0.55 + strength * 0.45))
-        medium.prepare()
+        rigid.prepare()
+        rigid.impactOccurred(intensity: CGFloat((0.45 + strength * 0.50).clamped(to: 0.45...0.95)))
+        rigid.prepare()
     }
 
-    /// A tiny "spring back" flick when the lobe rebounds after release.
     func earSpringBack() {
-        light.impactOccurred(intensity: 0.35)
-        light.prepare()
+        soft.prepare()
+        soft.impactOccurred(intensity: 0.45)
+        soft.prepare()
     }
 
-    /// One chomp beat — medium impact, rate-limited so it's rhythmic.
     func chompBeat(intensity: Double) {
-        guard Date().timeIntervalSince(lastBeatAt) > 0.11 else { return }
+        guard Date().timeIntervalSince(lastBeatAt) >= 0.07 else { return }
         lastBeatAt = Date()
-        medium.impactOccurred(intensity: CGFloat(0.50 + intensity * 0.50))
+        medium.prepare()
+        medium.impactOccurred(intensity: CGFloat((0.55 + intensity * 0.45).clamped(to: 0.55...1.0)))
         medium.prepare()
     }
 
-    /// The satisfying bubble pop. Heavy + tiny rigid tail for the "snap".
     func bubblePop() {
+        let now = Date()
+        bubbleCombo = now.timeIntervalSince(lastBubbleAt) < 0.35 ? bubbleCombo + 1 : 1
+        lastBubbleAt = now
+        heavy.prepare()
         heavy.impactOccurred(intensity: 1.0)
         heavy.prepare()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.03) { [weak self] in
-            self?.rigid.impactOccurred(intensity: 0.45)
-            self?.rigid.prepare()
+        if bubbleCombo >= 5 {
+            bubbleCombo = 0
+            success.prepare()
+            success.notificationOccurred(.success)
+            success.prepare()
         }
     }
 
-    func frictionTick(intensity: Double, minimumInterval: TimeInterval = 0.06) {
-        guard Date().timeIntervalSince(lastProgressAt) > minimumInterval else { return }
+    func frictionTick(intensity: Double, minimumInterval: TimeInterval = 0.05) {
+        guard Date().timeIntervalSince(lastProgressAt) >= max(0.05, minimumInterval) else { return }
         lastProgressAt = Date()
-        light.impactOccurred(intensity: CGFloat((0.25 + intensity * 0.65).clamped(to: 0.25...1.0)))
-        light.prepare()
+        let clamped = intensity.clamped(to: 0...1)
+        let generator: UIImpactFeedbackGenerator = clamped > 0.72 ? heavy : (clamped > 0.38 ? medium : light)
+        generator.prepare()
+        generator.impactOccurred(intensity: CGFloat((0.25 + clamped * 0.75).clamped(to: 0.25...1.0)))
+        generator.prepare()
+    }
+
+    func peak() {
+        guard Date().timeIntervalSince(lastProgressAt) >= 0.05 else { return }
+        lastProgressAt = Date()
+        heavy.prepare()
+        heavy.impactOccurred(intensity: 1.0)
+        heavy.prepare()
+    }
+
+    func releaseTail() {
+        soft.prepare()
+        soft.impactOccurred(intensity: 0.45)
+        soft.prepare()
     }
 
     func penHalfTurnTick(intensity: Double) {
-        medium.impactOccurred(intensity: CGFloat((0.55 + intensity * 0.35).clamped(to: 0.55...1.0)))
+        let interval = 0.14 - intensity.clamped(to: 0...1) * 0.09
+        guard Date().timeIntervalSince(lastPenAt) >= max(0.05, interval) else { return }
+        lastPenAt = Date()
+        medium.prepare()
+        medium.impactOccurred(intensity: CGFloat((0.45 + intensity * 0.50).clamped(to: 0.45...0.95)))
         medium.prepare()
     }
 
     func penInertiaStart() {
+        rigid.prepare()
         rigid.impactOccurred(intensity: 0.95)
         rigid.prepare()
     }
 
     func penCaught() {
+        medium.prepare()
         medium.impactOccurred(intensity: 0.85)
         medium.prepare()
     }
 
     func penStopped() {
-        heavy.impactOccurred(intensity: 0.9)
-        heavy.prepare()
-    }
-
-    /// A single 360° pen-spin tick.
-    func spinLoop() {
-        medium.impactOccurred(intensity: 0.6)
+        medium.prepare()
+        medium.impactOccurred(intensity: 0.75)
         medium.prepare()
     }
 
-    /// A quick "flick" tap while actively spinning the pen.
+    func spinLoop() {
+        penHalfTurnTick(intensity: 0.6)
+    }
+
     func spinFlick() {
+        guard Date().timeIntervalSince(lastPenAt) >= 0.05 else { return }
+        lastPenAt = Date()
+        light.prepare()
         light.impactOccurred(intensity: 0.4)
         light.prepare()
     }
 
-    /// Completion — reserved for nose (which still finishes with a booger).
     func heavyCompletion() {
-        heavy.impactOccurred(intensity: 1.0)
-        heavy.prepare()
+        peak()
     }
 }

@@ -103,7 +103,6 @@ struct BubblesDoodle: View {
         poppedAt = bestIdx
         burstStart = time
         HapticManager.shared.bubblePop()
-        AudioManager.shared.continuous(for: viewModel.mode, progress: 1.0) // Play the pop sound (1306)
         viewModel.engine.handleTap()
 
         // Move the whole canvas AFTER the pop animation finishes so the burst stays at the

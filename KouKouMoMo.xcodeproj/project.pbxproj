@@ -21,7 +21,6 @@
 		B0012 /* PenDoodle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0012 /* PenDoodle.swift */; };
 		B0013 /* GestureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0013 /* GestureEngine.swift */; };
 		B0014 /* GestureSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0014 /* GestureSurface.swift */; };
-		B0015 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0015 /* AudioManager.swift */; };
 		B0016 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0016 /* HapticManager.swift */; };
 		B0017 /* DoodleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0017 /* DoodleStyle.swift */; };
 		B0018 /* Rough.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0018 /* Rough.swift */; };
@@ -31,7 +30,6 @@
 		B0100 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0100 /* Assets.xcassets */; };
 		B0101 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A0101 /* Localizable.xcstrings */; };
 		B0102 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A0102 /* InfoPlist.xcstrings */; };
-		B0103 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = A0103 /* Sounds */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,7 +47,6 @@
 		A0012 /* PenDoodle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Game/Doodles/PenDoodle.swift; sourceTree = "<group>"; };
 		A0013 /* GestureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/GestureEngine/GestureEngine.swift; sourceTree = "<group>"; };
 		A0014 /* GestureSurface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/GestureEngine/GestureSurface.swift; sourceTree = "<group>"; };
-		A0015 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Audio/AudioManager.swift; sourceTree = "<group>"; };
 		A0016 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Haptics/HapticManager.swift; sourceTree = "<group>"; };
 		A0017 /* DoodleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Utils/DoodleStyle.swift; sourceTree = "<group>"; };
 		A0018 /* Rough.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Utils/Rough.swift; sourceTree = "<group>"; };
@@ -59,7 +56,6 @@
 		A0100 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = KouKouMoMo/Assets.xcassets; sourceTree = "<group>"; };
 		A0101 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = KouKouMoMo/Localizable.xcstrings; sourceTree = "<group>"; };
 		A0102 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = KouKouMoMo/InfoPlist.xcstrings; sourceTree = "<group>"; };
-		A0103 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = KouKouMoMo/Resources/Sounds; sourceTree = "<group>"; };
 		A0200 /* KouKouMoMo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KouKouMoMo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -89,7 +85,6 @@
 				D0011 /* Home */,
 				D0012 /* Game */,
 				D0013 /* GestureEngine */,
-				D0014 /* Audio */,
 				D0015 /* Haptics */,
 				D0016 /* Components */,
 				D0017 /* Utils */,
@@ -148,12 +143,6 @@
 			name = GestureEngine;
 			sourceTree = "<group>";
 		};
-		D0014 /* Audio */ = {
-			isa = PBXGroup;
-			children = ( A0015 /* AudioManager.swift */, );
-			name = Audio;
-			sourceTree = "<group>";
-		};
 		D0015 /* Haptics */ = {
 			isa = PBXGroup;
 			children = ( A0016 /* HapticManager.swift */, );
@@ -174,7 +163,7 @@
 		};
 		D0018 /* Resources */ = {
 			isa = PBXGroup;
-			children = ( A0100 /* Assets.xcassets */, A0101 /* Localizable.xcstrings */, A0102 /* InfoPlist.xcstrings */, A0103 /* Sounds */, );
+			children = ( A0100 /* Assets.xcassets */, A0101 /* Localizable.xcstrings */, A0102 /* InfoPlist.xcstrings */, );
 			name = Resources;
 			sourceTree = "<group>";
 		};
@@ -236,7 +225,6 @@
 				B0100 /* Assets.xcassets in Resources */,
 				B0101 /* Localizable.xcstrings in Resources */,
 				B0102 /* InfoPlist.xcstrings in Resources */,
-				B0103 /* Sounds in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,7 +249,6 @@
 				B0012 /* PenDoodle.swift in Sources */,
 				B0013 /* GestureEngine.swift in Sources */,
 				B0014 /* GestureSurface.swift in Sources */,
-				B0015 /* AudioManager.swift in Sources */,
 				B0016 /* HapticManager.swift in Sources */,
 				B0017 /* DoodleStyle.swift in Sources */,
 				B0018 /* Rough.swift in Sources */,

@@ -12,6 +12,7 @@ struct NoseDoodle: View {
     @State private var isDragging = false
     @State private var frictionGenerator = UIImpactFeedbackGenerator(style: .light)
     @State private var lastFrictionAt = Date.distantPast
+    @State private var didPeak = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -36,6 +37,8 @@ struct NoseDoodle: View {
                             lastDragTime = nil
                             lastTranslation = nil
                             isDragging = false
+                            didPeak = false
+                            HapticManager.shared.releaseTail()
                             withAnimation(.easeOut(duration: 0.3)) {
                                 viewModel.progress = 0
                             }
@@ -48,7 +51,6 @@ struct NoseDoodle: View {
     private func handleDrag(_ value: DragGesture.Value) {
         if !isDragging {
             isDragging = true
-            AudioManager.shared.start(for: viewModel.mode)
         }
         let now = value.time
         defer {
@@ -67,13 +69,16 @@ struct NoseDoodle: View {
                                      value.translation.height - previousTranslation.height)
         if translationDelta > 0.7 {
             viewModel.progress = min(1.0, viewModel.progress + Double(translationDelta) / 800.0)
-            AudioManager.shared.continuous(for: viewModel.mode, progress: viewModel.progress)
+            if viewModel.progress >= 1, !didPeak {
+                didPeak = true
+                HapticManager.shared.peak()
+            }
         }
         let speed = distance / dt
         fingerPoint = value.location
         guard distance > 0.7 else { return }
         let interval = max(0.05, 0.075 - min(1, Double(speed / 900)) * 0.035)
-        playFrictionHaptic(intensity: min(1, Double(speed / 850)), minimumInterval: interval)
+        playFrictionHaptic(intensity: max(viewModel.progress, min(1, Double(speed / 850))), minimumInterval: interval)
     }
 
     private func playFrictionHaptic(intensity: Double, minimumInterval: TimeInterval) {
