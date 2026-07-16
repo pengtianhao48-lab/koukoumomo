@@ -14,7 +14,8 @@ struct NavelDoodle: View {
 
     var body: some View {
         GeometryReader { proxy in
-            TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
+            ZStack {
+                TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
                 let time = context.date.timeIntervalSinceReferenceDate
                 Canvas { ctx, size in
                     NavelDoodleRenderer.draw(context: ctx, size: size,
@@ -40,6 +41,8 @@ struct NavelDoodle: View {
                             }
                         }
                 )
+                }
+                GestureHintView(hintText: "画圈", isTriggered: isDragging)
             }
         }
     }

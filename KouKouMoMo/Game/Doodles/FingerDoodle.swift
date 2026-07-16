@@ -14,16 +14,19 @@ struct FingerDoodle: View {
     @State private var lastTimelineStep: TimeInterval = 0
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
-            let time = context.date.timeIntervalSinceReferenceDate
-            Canvas { ctx, size in
-                FingerDoodleRenderer.draw(context: ctx, size: size,
-                                          axis: viewModel.axis,
-                                          velocity: viewModel.velocity,
-                                          debris: debris,
-                                          time: time)
+        ZStack {
+            TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
+                let time = context.date.timeIntervalSinceReferenceDate
+                Canvas { ctx, size in
+                    FingerDoodleRenderer.draw(context: ctx, size: size,
+                                              axis: viewModel.axis,
+                                              velocity: viewModel.velocity,
+                                              debris: debris,
+                                              time: time)
+                }
+                .onChange(of: time) { _, newTime in handleTimelineChange(newTime) }
             }
-            .onChange(of: time) { _, newTime in handleTimelineChange(newTime) }
+            GestureHintView(hintText: "拖动", isTriggered: viewModel.progress > 0)
         }
     }
 

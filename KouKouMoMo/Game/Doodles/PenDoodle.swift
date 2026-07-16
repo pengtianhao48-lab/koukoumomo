@@ -13,6 +13,7 @@ struct PenDoodle: View {
     @State private var catchAngle: Double?
     @State private var lastHalfTurnIndex = 0
     @State private var wasSpinning = false
+    @State private var hasDragged = false
     @State private var lastTimelineStep: TimeInterval = 0
 
     private let flickThreshold: CGFloat = 300
@@ -21,7 +22,8 @@ struct PenDoodle: View {
 
     var body: some View {
         GeometryReader { proxy in
-            TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
+            ZStack {
+                TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
                 let time = context.date.timeIntervalSinceReferenceDate
                 Canvas { ctx, size in
                     PenDoodleRenderer.draw(context: ctx, size: size,
@@ -36,6 +38,8 @@ struct PenDoodle: View {
                         .onEnded { value in handleEnded(value, size: proxy.size) }
                 )
                 .onChange(of: time) { _, newTime in handleTimelineChange(newTime) }
+                }
+                GestureHintView(hintText: "拖动", isTriggered: hasDragged)
             }
         }
     }
@@ -47,6 +51,7 @@ struct PenDoodle: View {
     }
 
     private func handleDrag(_ value: DragGesture.Value, size: CGSize) {
+        hasDragged = true
         let center = CGPoint(x: size.width / 2, y: size.height / 2)
         let point = value.location
         let fingerAngle = Double(atan2(point.y - center.y, point.x - center.x)) * 180 / Double.pi

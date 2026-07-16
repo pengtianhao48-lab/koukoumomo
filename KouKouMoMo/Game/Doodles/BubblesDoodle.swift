@@ -26,7 +26,8 @@ struct BubblesDoodle: View {
 
     var body: some View {
         GeometryReader { proxy in
-            TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
+            ZStack {
+                TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
                 let time = context.date.timeIntervalSinceReferenceDate
                 Canvas { ctx, size in
                     drawGrid(ctx: ctx, size: size, time: time)
@@ -46,6 +47,8 @@ struct BubblesDoodle: View {
                 .onChange(of: time) { _, newTime in
                     handleTimelineChange(newTime)
                 }
+                }
+                GestureHintView(hintText: "轻触", isTriggered: !popped.isEmpty)
             }
         }
     }

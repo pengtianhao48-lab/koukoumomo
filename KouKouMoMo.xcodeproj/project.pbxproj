@@ -27,6 +27,7 @@
 		B0019 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0019 /* Extensions.swift */; };
 		B0020 /* DoodleCloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0020 /* DoodleCloseButton.swift */; };
 		B0021 /* CompletionBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0021 /* CompletionBanner.swift */; };
+		B0022 /* GestureHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0022 /* GestureHintView.swift */; };
 		B0100 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0100 /* Assets.xcassets */; };
 		B0101 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A0101 /* Localizable.xcstrings */; };
 		B0102 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A0102 /* InfoPlist.xcstrings */; };
@@ -53,6 +54,7 @@
 		A0019 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Utils/Extensions.swift; sourceTree = "<group>"; };
 		A0020 /* DoodleCloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Components/DoodleCloseButton.swift; sourceTree = "<group>"; };
 		A0021 /* CompletionBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Components/CompletionBanner.swift; sourceTree = "<group>"; };
+		A0022 /* GestureHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Components/GestureHintView.swift; sourceTree = "<group>"; };
 		A0100 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = KouKouMoMo/Assets.xcassets; sourceTree = "<group>"; };
 		A0101 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = KouKouMoMo/Localizable.xcstrings; sourceTree = "<group>"; };
 		A0102 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = KouKouMoMo/InfoPlist.xcstrings; sourceTree = "<group>"; };
@@ -151,7 +153,7 @@
 		};
 		D0016 /* Components */ = {
 			isa = PBXGroup;
-			children = ( A0020 /* DoodleCloseButton.swift */, A0021 /* CompletionBanner.swift */, );
+			children = ( A0020 /* DoodleCloseButton.swift */, A0021 /* CompletionBanner.swift */, A0022 /* GestureHintView.swift */, );
 			name = Components;
 			sourceTree = "<group>";
 		};
@@ -255,6 +257,7 @@
 				B0019 /* Extensions.swift in Sources */,
 				B0020 /* DoodleCloseButton.swift in Sources */,
 				B0021 /* CompletionBanner.swift in Sources */,
+				B0022 /* GestureHintView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

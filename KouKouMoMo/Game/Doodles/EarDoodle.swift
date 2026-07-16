@@ -7,16 +7,19 @@ struct EarDoodle: View {
     @ObservedObject var viewModel: ToyViewModel
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
-            let time = context.date.timeIntervalSinceReferenceDate
-            Canvas { ctx, size in
-                EarDoodleRenderer.draw(context: ctx, size: size,
-                                       progress: viewModel.progress,
-                                       axis: viewModel.axis,
-                                       velocity: viewModel.velocity,
-                                       isCompleting: false,
-                                       time: time)
+        ZStack {
+            TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
+                let time = context.date.timeIntervalSinceReferenceDate
+                Canvas { ctx, size in
+                    EarDoodleRenderer.draw(context: ctx, size: size,
+                                           progress: viewModel.progress,
+                                           axis: viewModel.axis,
+                                           velocity: viewModel.velocity,
+                                           isCompleting: false,
+                                           time: time)
+                }
             }
+            GestureHintView(hintText: "拖动", isTriggered: viewModel.progress > 0)
         }
     }
 }

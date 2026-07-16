@@ -16,7 +16,8 @@ struct NoseDoodle: View {
 
     var body: some View {
         GeometryReader { proxy in
-            TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
+            ZStack {
+                TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
                 let now = context.date.timeIntervalSinceReferenceDate
                 Canvas { ctx, size in
                     NoseDoodleRenderer.draw(context: ctx, size: size,
@@ -44,6 +45,8 @@ struct NoseDoodle: View {
                             }
                         }
                 )
+                }
+                GestureHintView(hintText: "画圈", isTriggered: isDragging)
             }
         }
     }
