@@ -138,20 +138,20 @@ struct NoseDoodleThumbnail: View {
             ctx.fill(Rough.ellipse(in: rightBlush, wobble: W * 0.004, seed: 118), with: .color(DoodleStyle.blush.opacity(0.5)))
 
             var finger = Path()
-            let fingerTopCenter = CGPoint(x: W * 0.515, y: H * 0.52)
+            let fingerTopCenter = CGPoint(x: W * 0.515, y: H * 0.55)
             let fingerWidth = W * 0.085
             let halfFinger = fingerWidth * 0.5
             let topLeft = CGPoint(x: fingerTopCenter.x - halfFinger, y: fingerTopCenter.y + halfFinger)
             let topRight = CGPoint(x: fingerTopCenter.x + halfFinger, y: fingerTopCenter.y + halfFinger)
-            let bottomLeft = CGPoint(x: W * 0.58, y: H * 0.90)
-            let bottomRight = CGPoint(x: W * 0.66, y: H * 0.90)
+            let bottomLeft = CGPoint(x: W * 0.58, y: H * 0.93)
+            let bottomRight = CGPoint(x: W * 0.66, y: H * 0.93)
             finger.move(to: bottomLeft)
             finger.addLine(to: topLeft)
             finger.addQuadCurve(to: topRight,
                                 control: CGPoint(x: fingerTopCenter.x, y: fingerTopCenter.y - halfFinger * 0.9))
             finger.addLine(to: bottomRight)
             finger.addQuadCurve(to: bottomLeft,
-                                control: CGPoint(x: W * 0.63, y: H * 0.925))
+                                control: CGPoint(x: W * 0.63, y: H * 0.955))
             finger.closeSubpath()
             ctx.stroke(finger, with: .color(ink), style: .doodle)
             ctx.stroke(Rough.arc(from: CGPoint(x: fingerTopCenter.x - fingerWidth * 0.28, y: fingerTopCenter.y + H * 0.048),
