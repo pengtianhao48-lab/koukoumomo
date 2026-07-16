@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct NavelDoodle: View {
     @ObservedObject var viewModel: ToyViewModel
@@ -7,6 +8,8 @@ struct NavelDoodle: View {
     @State private var lastDragTime: Date?
     @State private var lastTranslation: CGSize?
     @State private var isDragging = false
+    @State private var frictionGenerator = UIImpactFeedbackGenerator(style: .light)
+    @State private var lastFrictionAt = Date.distantPast
 
     var body: some View {
         GeometryReader { proxy in
@@ -66,7 +69,15 @@ struct NavelDoodle: View {
         fingerPoint = value.location
         guard distance > 0.7 else { return }
         let interval = max(0.05, 0.075 - min(1, Double(speed / 900)) * 0.035)
-        HapticManager.shared.frictionTick(intensity: min(1, Double(speed / 850)), minimumInterval: interval)
+        playFrictionHaptic(intensity: min(1, Double(speed / 850)), minimumInterval: interval)
+    }
+
+    private func playFrictionHaptic(intensity: Double, minimumInterval: TimeInterval) {
+        guard Date().timeIntervalSince(lastFrictionAt) > minimumInterval else { return }
+        lastFrictionAt = Date()
+        frictionGenerator.prepare()
+        frictionGenerator.impactOccurred(intensity: CGFloat((0.25 + intensity * 0.65).clamped(to: 0.25...1.0)))
+        frictionGenerator.prepare()
     }
 }
 
