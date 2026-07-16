@@ -2,7 +2,7 @@
 
 一款「不用看屏幕」的电子解压玩具。闭着眼、一根手指、屏幕中央、无限循环。
 
-- **Bundle ID**: `com.pth.kokomomo`
+- **Bundle ID**: `com.pth.koukoumomo-app`
 - **最低系统**: iOS 17
 - **技术栈**: SwiftUI · Swift 5 · MVVM · 零依赖 · 无网络
 - **本地化**: English (default) · 简体中文（跟随系统语言）
