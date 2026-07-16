@@ -11,6 +11,7 @@ struct FingerDoodle: View {
     @State private var debris: [Debris] = []
     @State private var lastEmit: TimeInterval = 0
     @State private var lastBiteSign: Double = 0
+    @State private var lastTimelineStep: TimeInterval = 0
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0/60, paused: false)) { context in
@@ -22,8 +23,14 @@ struct FingerDoodle: View {
                                           debris: debris,
                                           time: time)
             }
-            .onChange(of: time) { _, newTime in step(now: newTime) }
+            .onChange(of: time) { _, newTime in handleTimelineChange(newTime) }
         }
+    }
+
+    private func handleTimelineChange(_ newTime: TimeInterval) {
+        guard newTime - lastTimelineStep > 0.001 else { return }
+        lastTimelineStep = newTime
+        step(now: newTime)
     }
 
     private func step(now: TimeInterval) {

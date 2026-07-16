@@ -22,6 +22,7 @@ struct BubblesDoodle: View {
     @State private var lastAcceptedTapTime: TimeInterval?
     @State private var burstDuration: TimeInterval = 0.35
     @State private var isTouching = false
+    @State private var lastTimelineStep: TimeInterval = 0
 
     var body: some View {
         GeometryReader { proxy in
@@ -43,7 +44,7 @@ struct BubblesDoodle: View {
                         }
                 )
                 .onChange(of: time) { _, newTime in
-                    moveCanvasIfBurstFinished(now: newTime)
+                    handleTimelineChange(newTime)
                 }
             }
         }
@@ -51,6 +52,12 @@ struct BubblesDoodle: View {
 
     private func cellIndex(row: Int, col: Int) -> Int { row * Self.cols + col }
     private func rowCol(of index: Int) -> (row: Int, col: Int) { (index / Self.cols, index % Self.cols) }
+
+    private func handleTimelineChange(_ newTime: TimeInterval) {
+        guard newTime - lastTimelineStep > 0.001 else { return }
+        lastTimelineStep = newTime
+        moveCanvasIfBurstFinished(now: newTime)
+    }
 
     private func worldPos(row: Int, col: Int) -> CGPoint {
         let cx = CGFloat(col) - CGFloat(Self.cols - 1) / 2

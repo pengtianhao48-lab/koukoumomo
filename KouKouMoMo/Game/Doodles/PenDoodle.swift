@@ -13,6 +13,7 @@ struct PenDoodle: View {
     @State private var catchAngle: Double?
     @State private var lastHalfTurnIndex = 0
     @State private var wasSpinning = false
+    @State private var lastTimelineStep: TimeInterval = 0
 
     private let flickThreshold: CGFloat = 300
     private let friction: Double = 1.75
@@ -34,9 +35,15 @@ struct PenDoodle: View {
                         .onChanged { value in handleDrag(value, size: proxy.size) }
                         .onEnded { value in handleEnded(value, size: proxy.size) }
                 )
-                .onChange(of: time) { _, newTime in step(now: newTime) }
+                .onChange(of: time) { _, newTime in handleTimelineChange(newTime) }
             }
         }
+    }
+
+    private func handleTimelineChange(_ newTime: TimeInterval) {
+        guard newTime - lastTimelineStep > 0.001 else { return }
+        lastTimelineStep = newTime
+        step(now: newTime)
     }
 
     private func handleDrag(_ value: DragGesture.Value, size: CGSize) {
