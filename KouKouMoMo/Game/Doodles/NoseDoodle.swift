@@ -33,6 +33,9 @@ struct NoseDoodle: View {
                             lastDragTime = nil
                             lastTranslation = nil
                             isDragging = false
+                            withAnimation(.easeOut(duration: 0.3)) {
+                                viewModel.progress = 0
+                            }
                         }
                 )
             }

@@ -29,6 +29,9 @@ struct NavelDoodle: View {
                             lastDragTime = nil
                             lastTranslation = nil
                             isDragging = false
+                            withAnimation(.easeOut(duration: 0.3)) {
+                                viewModel.progress = 0
+                            }
                         }
                 )
             }
@@ -79,7 +82,8 @@ private enum NavelDoodleRenderer {
         let H = size.height
         let compression = 1 - CGFloat(progress) * 0.10
         let sink = CGFloat(progress) * 8
-        var bellyRect = CGRect(x: W * 0.08, y: H * 0.20 + sink, width: W * 0.84, height: H * 0.70 * compression)
+        let baseBellyRect = CGRect(x: W * 0.08, y: H * 0.20 + sink, width: W * 0.84, height: H * 0.70 * compression)
+        var bellyRect = baseBellyRect
         if progress >= 0.99 && isDragging {
             bellyRect.origin.x += CGFloat(sin(time * 25)) * 2.2
             bellyRect.origin.y += CGFloat(cos(time * 21)) * 2.2
@@ -89,20 +93,25 @@ private enum NavelDoodleRenderer {
         context.stroke(Rough.ellipse(in: bellyRect, wobble: 2.4, points: 46, seed: 210),
                        with: .color(DoodleStyle.ink), style: .doodleBold)
 
-        let hlA = CGPoint(x: bellyRect.minX + bellyRect.width * 0.18, y: bellyRect.minY + bellyRect.height * 0.35)
-        let hlB = CGPoint(x: bellyRect.minX + bellyRect.width * 0.32, y: bellyRect.minY + bellyRect.height * 0.18)
+        // All non-shaking elements use baseBellyRect coordinates or static center
+        let hlA = CGPoint(x: baseBellyRect.minX + baseBellyRect.width * 0.18, y: baseBellyRect.minY + baseBellyRect.height * 0.35)
+        let hlB = CGPoint(x: baseBellyRect.minX + baseBellyRect.width * 0.32, y: baseBellyRect.minY + baseBellyRect.height * 0.18)
         context.stroke(Rough.arc(from: hlA, to: hlB, bulge: -6, seed: 211),
                        with: .color(DoodleStyle.inkFaint.opacity(0.35)), style: .doodle)
-        let shA = CGPoint(x: bellyRect.maxX - bellyRect.width * 0.14, y: bellyRect.midY + bellyRect.height * 0.05)
-        let shB = CGPoint(x: bellyRect.maxX - bellyRect.width * 0.32, y: bellyRect.maxY - bellyRect.height * 0.14)
+        let shA = CGPoint(x: baseBellyRect.maxX - baseBellyRect.width * 0.14, y: baseBellyRect.midY + baseBellyRect.height * 0.05)
+        let shB = CGPoint(x: baseBellyRect.maxX - baseBellyRect.width * 0.32, y: baseBellyRect.maxY - baseBellyRect.height * 0.14)
         context.stroke(Rough.arc(from: shA, to: shB, bulge: 22, seed: 212),
                        with: .color(DoodleStyle.inkSoft.opacity(0.45)), style: .doodle)
-        let sh2A = CGPoint(x: bellyRect.maxX - bellyRect.width * 0.08, y: bellyRect.midY - bellyRect.height * 0.03)
-        let sh2B = CGPoint(x: bellyRect.maxX - bellyRect.width * 0.20, y: bellyRect.maxY - bellyRect.height * 0.06)
+        let sh2A = CGPoint(x: baseBellyRect.maxX - baseBellyRect.width * 0.08, y: baseBellyRect.midY - baseBellyRect.height * 0.03)
+        let sh2B = CGPoint(x: baseBellyRect.maxX - baseBellyRect.width * 0.20, y: baseBellyRect.maxY - baseBellyRect.height * 0.06)
         context.stroke(Rough.arc(from: sh2A, to: sh2B, bulge: 14, seed: 213),
                        with: .color(DoodleStyle.inkSoft.opacity(0.3)), style: .doodleThin)
 
-        let center = CGPoint(x: bellyRect.midX, y: bellyRect.midY + bellyRect.height * 0.04)
+        var center = CGPoint(x: baseBellyRect.midX, y: baseBellyRect.midY + baseBellyRect.height * 0.04)
+        if progress >= 0.99 && isDragging {
+            center.x += CGFloat(cos(time * 23)) * 1.5
+            center.y += CGFloat(sin(time * 26)) * 1.5
+        }
         let navelW: CGFloat = 60
         let navelH: CGFloat = 44
         let rimRect = CGRect(x: center.x - navelW/2, y: center.y - navelH/2, width: navelW, height: navelH)

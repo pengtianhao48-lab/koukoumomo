@@ -21,6 +21,7 @@ struct BubblesDoodle: View {
     @State private var recentTapIntervals: [TimeInterval] = []
     @State private var lastAcceptedTapTime: TimeInterval?
     @State private var burstDuration: TimeInterval = 0.35
+    @State private var isTouching = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -31,8 +32,15 @@ struct BubblesDoodle: View {
                 }
                 .contentShape(Rectangle())
                 .gesture(
-                    SpatialTapGesture()
-                        .onEnded { evt in handleTap(at: evt.location, viewSize: proxy.size, time: time) }
+                    DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                        .onChanged { value in
+                            guard !isTouching else { return }
+                            isTouching = true
+                            handleTap(at: value.location, viewSize: proxy.size, time: time)
+                        }
+                        .onEnded { _ in
+                            isTouching = false
+                        }
                 )
                 .onChange(of: time) { _, newTime in
                     moveCanvasIfBurstFinished(now: newTime)
