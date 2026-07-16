@@ -138,20 +138,21 @@ struct NoseDoodleThumbnail: View {
             ctx.fill(Rough.ellipse(in: rightBlush, wobble: W * 0.004, seed: 118), with: .color(DoodleStyle.blush.opacity(0.5)))
 
             var finger = Path()
-            let p0 = CGPoint(x: W * 0.44, y: H * 1.02)
-            let p1 = CGPoint(x: W * 0.38, y: H * 0.52)
-            let dx = W * 0.08
-            finger.move(to: CGPoint(x: p0.x - dx * 0.48, y: p0.y))
-            finger.addLine(to: CGPoint(x: p1.x - dx * 0.45, y: p1.y + H * 0.035))
-            finger.addQuadCurve(to: CGPoint(x: p1.x + dx * 0.45, y: p1.y + H * 0.005),
-                                control: CGPoint(x: p1.x, y: p1.y - H * 0.040))
-            finger.addLine(to: CGPoint(x: p0.x + dx * 0.48, y: p0.y))
+            let fingerCenterX = W * 0.515
+            let fingerTop = H * 0.52
+            let fingerBottom = H * 1.02
+            let fingerWidth = W * 0.085
+            let halfFinger = fingerWidth * 0.5
+            finger.move(to: CGPoint(x: fingerCenterX - halfFinger, y: fingerBottom))
+            finger.addLine(to: CGPoint(x: fingerCenterX - halfFinger, y: fingerTop + halfFinger))
+            finger.addQuadCurve(to: CGPoint(x: fingerCenterX + halfFinger, y: fingerTop + halfFinger),
+                                control: CGPoint(x: fingerCenterX, y: fingerTop - halfFinger * 0.9))
+            finger.addLine(to: CGPoint(x: fingerCenterX + halfFinger, y: fingerBottom))
             finger.closeSubpath()
-            ctx.fill(finger, with: .color(DoodleStyle.sunshine.opacity(0.34)))
             ctx.stroke(finger, with: .color(ink), style: .doodle)
-            ctx.stroke(Rough.arc(from: CGPoint(x: W * 0.365, y: H * 0.565),
-                                 to: CGPoint(x: W * 0.425, y: H * 0.548),
-                                 bulge: -W * 0.018,
+            ctx.stroke(Rough.arc(from: CGPoint(x: fingerCenterX - fingerWidth * 0.30, y: fingerTop + H * 0.045),
+                                 to: CGPoint(x: fingerCenterX + fingerWidth * 0.30, y: fingerTop + H * 0.045),
+                                 bulge: -fingerWidth * 0.18,
                                  seed: 119),
                        with: .color(DoodleStyle.inkSoft), style: .doodleThin)
 
