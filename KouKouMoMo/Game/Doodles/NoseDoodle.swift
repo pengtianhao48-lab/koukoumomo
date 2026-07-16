@@ -134,25 +134,28 @@ struct NoseDoodleThumbnail: View {
                                control: CGPoint(x: W * 0.50, y: H * 0.70))
             ctx.stroke(mouth, with: .color(ink), style: .doodleThin)
 
-            let fingerX = W * 0.535
-            let fingerTop = H * 0.535
+            let fingerX = W * 0.54
+            let fingerTop = H * 0.51
+            let fingerW = W * 0.045
             var finger = Path()
-            finger.move(to: CGPoint(x: fingerX - W * 0.035, y: H * 0.88))
-            finger.addCurve(to: CGPoint(x: fingerX - W * 0.022, y: fingerTop),
-                            control1: CGPoint(x: fingerX - W * 0.048, y: H * 0.76),
-                            control2: CGPoint(x: fingerX - W * 0.040, y: H * 0.62))
-            finger.addQuadCurve(to: CGPoint(x: fingerX + W * 0.030, y: fingerTop + H * 0.010),
-                                control: CGPoint(x: fingerX + W * 0.002, y: H * 0.505))
-            finger.addCurve(to: CGPoint(x: fingerX + W * 0.032, y: H * 0.88),
-                            control1: CGPoint(x: fingerX + W * 0.050, y: H * 0.63),
-                            control2: CGPoint(x: fingerX + W * 0.045, y: H * 0.76))
+            finger.move(to: CGPoint(x: fingerX - fingerW * 0.5, y: H * 0.88))
+            finger.addLine(to: CGPoint(x: fingerX - fingerW * 0.5, y: fingerTop + fingerW * 0.5))
+            finger.addArc(center: CGPoint(x: fingerX, y: fingerTop + fingerW * 0.5),
+                          radius: fingerW * 0.5,
+                          startAngle: .degrees(180),
+                          endAngle: .degrees(0),
+                          clockwise: false)
+            finger.addLine(to: CGPoint(x: fingerX + fingerW * 0.5, y: H * 0.88))
+            finger.closeSubpath()
+
             ctx.fill(finger, with: .color(DoodleStyle.sunshine.opacity(0.34)))
             ctx.stroke(finger, with: .color(ink), style: .doodle)
 
-            let nail = CGRect(x: fingerX - W * 0.018, y: fingerTop + H * 0.005, width: W * 0.036, height: H * 0.025)
-            ctx.stroke(Rough.arc(from: CGPoint(x: nail.minX, y: nail.midY),
-                                 to: CGPoint(x: nail.maxX, y: nail.midY),
-                                 bulge: -W * 0.012,
+            let nailW = fingerW * 0.75
+            let nailH = fingerW * 0.55
+            ctx.stroke(Rough.arc(from: CGPoint(x: fingerX - nailW * 0.5, y: fingerTop + nailH * 1.2),
+                                 to: CGPoint(x: fingerX + nailW * 0.5, y: fingerTop + nailH * 1.2),
+                                 bulge: -nailH,
                                  seed: 116),
                        with: .color(DoodleStyle.inkSoft), style: .doodleThin)
         }

@@ -128,39 +128,38 @@ private struct DoodleSettingsSheet: View {
         ZStack {
             DoodleStyle.paper.ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                DoodleSheetHandle()
-                    .frame(width: 64, height: 16)
-                    .padding(.top, 12)
-                    .padding(.bottom, 8)
+            VStack(spacing: 12) {
+                VStack(spacing: 0) {
+                    DoodleSheetHandle()
+                        .frame(width: 64, height: 16)
+                        .padding(.top, 12)
+                        .padding(.bottom, 8)
 
-                DoodleSettingsRow(title: String(localized: "settings.version"), value: version)
-                DoodleDivider()
-                    .frame(height: 12)
-                Button {
-                    if let url = URL(string: "mailto:pengtianhao@vip.qq.com") {
-                        openURL(url)
+                    DoodleSettingsRow(title: String(localized: "settings.version"), value: version)
+                    DoodleDivider()
+                        .frame(height: 12)
+                    Button {
+                        if let url = URL(string: "mailto:pengtianhao@vip.qq.com") {
+                            openURL(url)
+                        }
+                    } label: {
+                        DoodleSettingsRow(title: String(localized: "settings.contact"), value: "pengtianhao@vip.qq.com")
                     }
-                } label: {
-                    DoodleSettingsRow(title: String(localized: "settings.contact"), value: "pengtianhao@vip.qq.com")
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
-            }
-            .padding(.bottom, 18)
-            .background {
-                Canvas { ctx, size in
-                    let rect = CGRect(origin: .zero, size: size).insetBy(dx: 4, dy: 4)
-                    ctx.fill(Rough.roundedRect(rect, corner: 30, wobble: 1.5, seed: 221), with: .color(DoodleStyle.paper))
-                    ctx.stroke(Rough.roundedRect(rect, corner: 30, wobble: 1.5, seed: 221), with: .color(DoodleStyle.ink), style: .doodle)
+                .padding(.bottom, 18)
+                .background {
+                    Canvas { ctx, size in
+                        let rect = CGRect(origin: .zero, size: size).insetBy(dx: 4, dy: 4)
+                        ctx.fill(Rough.roundedRect(rect, corner: 30, wobble: 1.5, seed: 221), with: .color(DoodleStyle.paper))
+                        ctx.stroke(Rough.roundedRect(rect, corner: 30, wobble: 1.5, seed: 221), with: .color(DoodleStyle.ink), style: .doodle)
+                    }
                 }
-            }
-            .padding(.horizontal, 16)
+                .padding(.horizontal, 16)
 
-            DoodleCloseButton()
-                .frame(width: 42, height: 42)
-                .padding(.top, 18)
-                .padding(.trailing, 28)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                DoodleCloseButton()
+                    .frame(width: 44, height: 44)
+            }
         }
     }
 }
