@@ -24,9 +24,12 @@ struct HomeView: View {
             .navigationBarHidden(true)
         }
         .tint(DoodleStyle.ink)
+        .onAppear {
+            ReviewManager.checkOnHomeAppear()
+        }
         .sheet(isPresented: $isShowingSettings) {
             DoodleSettingsSheet()
-                .presentationDetents([.height(250)])
+                .presentationDetents([.height(330)])
                 .presentationDragIndicator(.hidden)
         }
     }
@@ -117,6 +120,7 @@ private struct DoodleSettingsGear: View {
 
 private struct DoodleSettingsSheet: View {
     @Environment(\.openURL) private var openURL
+    @ObservedObject private var usage = UsageStatsManager.shared
 
     private var version: String {
         let raw = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0"
@@ -135,6 +139,9 @@ private struct DoodleSettingsSheet: View {
                         .padding(.top, 12)
                         .padding(.bottom, 8)
 
+                    DoodleSettingsRow(title: String(localized: "settings.usage"), value: usage.formattedUsageText())
+                    DoodleDivider()
+                        .frame(height: 12)
                     DoodleSettingsRow(title: String(localized: "settings.version"), value: version)
                     DoodleDivider()
                         .frame(height: 12)
@@ -144,6 +151,14 @@ private struct DoodleSettingsSheet: View {
                         }
                     } label: {
                         DoodleSettingsRow(title: String(localized: "settings.contact"), value: "pengtianhao@vip.qq.com")
+                    }
+                    .buttonStyle(.plain)
+                    DoodleDivider()
+                        .frame(height: 12)
+                    Button {
+                        ReviewManager.openWriteReview()
+                    } label: {
+                        DoodleSettingsRow(title: String(localized: "settings.rate"), value: "")
                     }
                     .buttonStyle(.plain)
                 }

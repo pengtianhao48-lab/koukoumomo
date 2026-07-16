@@ -38,6 +38,30 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "联系作者" } }
       }
     },
+    "settings.rate" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Rate on App Store" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "给个好评 ⭐️" } }
+      }
+    },
+    "settings.usage" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "使用时长" } }
+      }
+    },
+    "usage.minutes" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Bored for %@ min" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已经无聊了 %@ 分钟" } }
+      }
+    },
+    "usage.hours_minutes" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Bored for %@ hr %@ min" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已经无聊了 %@ 小时 %@ 分钟" } }
+      }
+    },
     "app_name" : {
       "comment" : "App name shown on the home screen.",
       "localizations" : {

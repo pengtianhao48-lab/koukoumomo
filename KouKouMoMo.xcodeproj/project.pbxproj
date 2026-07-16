@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B0001 /* KouKouMoMoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0001 /* KouKouMoMoApp.swift */; };
+		B0023 /* AppServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0023 /* AppServices.swift */; };
 		B0002 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0002 /* HomeView.swift */; };
 		B0003 /* PlayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0003 /* PlayMode.swift */; };
 		B0004 /* GameContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0004 /* GameContainerView.swift */; };
@@ -35,6 +36,7 @@
 
 /* Begin PBXFileReference section */
 		A0001 /* KouKouMoMoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/App/KouKouMoMoApp.swift; sourceTree = "<group>"; };
+		A0023 /* AppServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/App/AppServices.swift; sourceTree = "<group>"; };
 		A0002 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Home/HomeView.swift; sourceTree = "<group>"; };
 		A0003 /* PlayMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Home/PlayMode.swift; sourceTree = "<group>"; };
 		A0004 /* GameContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KouKouMoMo/Game/GameContainerView.swift; sourceTree = "<group>"; };
@@ -105,7 +107,7 @@
 		};
 		D0010 /* App */ = {
 			isa = PBXGroup;
-			children = ( A0001 /* KouKouMoMoApp.swift */, );
+			children = ( A0001 /* KouKouMoMoApp.swift */, A0023 /* AppServices.swift */, );
 			name = App;
 			sourceTree = "<group>";
 		};
@@ -238,6 +240,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B0001 /* KouKouMoMoApp.swift in Sources */,
+				B0023 /* AppServices.swift in Sources */,
 				B0002 /* HomeView.swift in Sources */,
 				B0003 /* PlayMode.swift in Sources */,
 				B0004 /* GameContainerView.swift in Sources */,

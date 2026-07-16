@@ -49,6 +49,9 @@ struct GameContainerView: View {
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text(mode.titleKey))
         .accessibilityHint(Text(mode.gestureHintKey))
+        .onAppear {
+            ReviewManager.recordPlayedMode(mode)
+        }
     }
 
     @ViewBuilder
