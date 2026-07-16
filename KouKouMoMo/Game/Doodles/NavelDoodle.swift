@@ -65,7 +65,7 @@ struct NavelDoodle: View {
         let speed = distance / dt
         fingerPoint = value.location
         guard distance > 0.7 else { return }
-        let interval = max(0.028, 0.075 - min(1, Double(speed / 900)) * 0.035)
+        let interval = max(0.05, 0.075 - min(1, Double(speed / 900)) * 0.035)
         HapticManager.shared.frictionTick(intensity: min(1, Double(speed / 850)), minimumInterval: interval)
     }
 }
