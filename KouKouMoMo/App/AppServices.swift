@@ -81,7 +81,7 @@ enum ReviewManager {
     }
 
     static func openWriteReview() {
-        guard let url = URL(string: "https://apps.apple.com/app/idYOUR_APP_ID?action=write-review") else { return }
+        guard let url = URL(string: "https://apps.apple.com/app/id6791597897?action=write-review") else { return }
         UIApplication.shared.open(url)
     }
 
