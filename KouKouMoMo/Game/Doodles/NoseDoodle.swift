@@ -7,6 +7,7 @@ struct NoseDoodle: View {
     @State private var fingerPoint: CGPoint?
     @State private var lastDragPoint: CGPoint?
     @State private var lastDragTime: Date?
+    @State private var lastTranslation: CGSize?
 
     var body: some View {
         GeometryReader { proxy in
@@ -28,6 +29,7 @@ struct NoseDoodle: View {
                         .onEnded { _ in
                             lastDragPoint = nil
                             lastDragTime = nil
+                            lastTranslation = nil
                         }
                 )
             }
@@ -39,6 +41,7 @@ struct NoseDoodle: View {
         defer {
             lastDragPoint = value.location
             lastDragTime = now
+            lastTranslation = value.translation
         }
         guard let previous = lastDragPoint, let previousTime = lastDragTime else {
             fingerPoint = value.location
@@ -46,6 +49,12 @@ struct NoseDoodle: View {
         }
         let dt = max(0.001, now.timeIntervalSince(previousTime))
         let distance = hypot(value.location.x - previous.x, value.location.y - previous.y)
+        let previousTranslation = lastTranslation ?? value.translation
+        let translationDelta = hypot(value.translation.width - previousTranslation.width,
+                                     value.translation.height - previousTranslation.height)
+        if translationDelta > 0.7 {
+            viewModel.progress = min(1.0, viewModel.progress + Double(translationDelta) / 800.0)
+        }
         let speed = distance / dt
         fingerPoint = value.location
         guard distance > 0.7 else { return }
