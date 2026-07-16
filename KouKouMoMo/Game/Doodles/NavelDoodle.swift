@@ -44,21 +44,9 @@ struct NavelDoodle: View {
         let distance = hypot(value.location.x - previous.x, value.location.y - previous.y)
         let speed = distance / dt
         fingerPoint = value.location
-        guard distance > 0.7, isInsideNavel(value.location, size: size) else { return }
+        guard distance > 0.7 else { return }
         let interval = max(0.028, 0.075 - min(1, Double(speed / 900)) * 0.035)
         HapticManager.shared.frictionTick(intensity: min(1, Double(speed / 850)), minimumInterval: interval)
-    }
-
-    private func isInsideNavel(_ point: CGPoint, size: CGSize) -> Bool {
-        let W = size.width
-        let H = size.height
-        let bellyRect = CGRect(x: W * 0.08, y: H * 0.20, width: W * 0.84, height: H * 0.70)
-        let center = CGPoint(x: bellyRect.midX, y: bellyRect.midY + bellyRect.height * 0.04)
-        let rx: CGFloat = 46
-        let ry: CGFloat = 38
-        let dx = point.x - center.x
-        let dy = point.y - center.y
-        return (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1
     }
 }
 

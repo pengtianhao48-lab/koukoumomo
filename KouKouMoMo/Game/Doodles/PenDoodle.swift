@@ -64,13 +64,8 @@ struct PenDoodle: View {
             return
         }
 
-        let previousAngle = lastFingerAngle ?? fingerAngle
-        let delta = normalizedAngleDelta(fingerAngle - previousAngle)
-        let speed = dragSpeed(value)
-        if speed < flickThreshold {
-            angle += delta
-            angularVelocity = delta / max(0.001, value.time.timeIntervalSince(lastDragTime ?? value.time))
-        }
+        angle = fingerAngle
+        angularVelocity = 0
         lastDragPoint = point
         lastDragTime = value.time
         lastFingerAngle = fingerAngle

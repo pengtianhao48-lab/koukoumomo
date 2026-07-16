@@ -46,23 +46,9 @@ struct NoseDoodle: View {
         let distance = hypot(value.location.x - previous.x, value.location.y - previous.y)
         let speed = distance / dt
         fingerPoint = value.location
-        guard distance > 0.7, isInsideNostril(value.location, size: size) else { return }
+        guard distance > 0.7 else { return }
         let interval = max(0.028, 0.075 - min(1, Double(speed / 900)) * 0.035)
         HapticManager.shared.frictionTick(intensity: min(1, Double(speed / 850)), minimumInterval: interval)
-    }
-
-    private func isInsideNostril(_ point: CGPoint, size: CGSize) -> Bool {
-        let W = size.width
-        let H = size.height
-        let face = CGRect(x: W * 0.14, y: H * 0.16, width: W * 0.72, height: H * 0.68)
-        let noseRight = CGPoint(x: face.midX + face.width * 0.16, y: face.midY + face.height * 0.14)
-        let nostril = CGRect(x: noseRight.x - 28, y: noseRight.y - 12, width: 22, height: 14)
-        let center = CGPoint(x: nostril.midX, y: nostril.midY)
-        let rx = nostril.width * 1.5
-        let ry = nostril.height * 1.6
-        let dx = point.x - center.x
-        let dy = point.y - center.y
-        return (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1
     }
 }
 
@@ -88,29 +74,38 @@ private enum NoseDoodleRenderer {
         context.stroke(Rough.ellipse(in: face, wobble: 2.2, points: 42, seed: 11),
                        with: .color(DoodleStyle.ink), style: .doodleBold)
 
-        let cheekOpacity = 0.35 + progress * 0.35
+        let expression = CGFloat(progress.clamped(to: 0...1))
+        let cheekOpacity = 0.32 + Double(expression) * 0.48
         context.fill(Rough.ellipse(in: CGRect(x: face.minX + face.width * 0.10, y: face.midY + face.height * 0.06,
-                                              width: face.width * 0.18, height: face.width * 0.10),
+                                              width: face.width * (0.17 + expression * 0.04), height: face.width * (0.10 + expression * 0.04)),
                                     wobble: 1.4, seed: 21),
                      with: .color(DoodleStyle.blush.opacity(cheekOpacity)))
-        context.fill(Rough.ellipse(in: CGRect(x: face.maxX - face.width * 0.28, y: face.midY + face.height * 0.06,
-                                              width: face.width * 0.18, height: face.width * 0.10),
+        context.fill(Rough.ellipse(in: CGRect(x: face.maxX - face.width * (0.28 + expression * 0.02), y: face.midY + face.height * 0.06,
+                                              width: face.width * (0.17 + expression * 0.04), height: face.width * (0.10 + expression * 0.04)),
                                     wobble: 1.4, seed: 22),
                      with: .color(DoodleStyle.blush.opacity(cheekOpacity)))
 
         let eyeY = face.midY - face.height * 0.14
-        let eyeHeight: CGFloat = 8 + 3 * CGFloat(sin(time * 0.6)) - CGFloat(progress) * 5
+        let eyeHeight: CGFloat = max(2.0, 10 + 3 * CGFloat(sin(time * 0.6)) - expression * 8)
         for (idx, c) in [CGPoint(x: face.midX - face.width * 0.19, y: eyeY), CGPoint(x: face.midX + face.width * 0.19, y: eyeY)].enumerated() {
-            let squint = max(2.5, eyeHeight)
-            let rect = CGRect(x: c.x - 7, y: c.y - squint / 2, width: 14, height: squint)
-            context.fill(Rough.ellipse(in: rect, wobble: 0.6, seed: 33 &+ idx), with: .color(DoodleStyle.ink))
+            if expression < 0.55 {
+                let rect = CGRect(x: c.x - 7, y: c.y - eyeHeight / 2, width: 14, height: eyeHeight)
+                context.fill(Rough.ellipse(in: rect, wobble: 0.6, seed: 33 &+ idx), with: .color(DoodleStyle.ink))
+            } else {
+                let w: CGFloat = 22 + expression * 8
+                let bulge: CGFloat = idx == 0 ? -8 - expression * 7 : 8 + expression * 7
+                context.stroke(Rough.arc(from: CGPoint(x: c.x - w / 2, y: c.y),
+                                         to: CGPoint(x: c.x + w / 2, y: c.y),
+                                         bulge: bulge, seed: 33 &+ idx),
+                               with: .color(DoodleStyle.ink), style: .doodleBold)
+            }
         }
-        let browTilt = CGFloat(progress) * 12
+        let browTilt = 8 + expression * 20
         for (i, cx) in [face.midX - face.width * 0.19, face.midX + face.width * 0.19].enumerated() {
-            let sign: CGFloat = i == 0 ? 1 : -1
-            context.stroke(Rough.line(from: CGPoint(x: cx - 14, y: eyeY - 18 + browTilt * sign),
-                                      to: CGPoint(x: cx + 14, y: eyeY - 18 - browTilt * sign),
-                                      steps: 6, amp: 1.0, seed: 71 &+ i),
+            let inward: CGFloat = i == 0 ? 1 : -1
+            context.stroke(Rough.line(from: CGPoint(x: cx - 15, y: eyeY - 20 + browTilt * inward * 0.45),
+                                      to: CGPoint(x: cx + 15, y: eyeY - 20 - browTilt * inward * 0.45),
+                                      steps: 6, amp: 1.0 + expression * 0.6, seed: 71 &+ i),
                            with: .color(DoodleStyle.ink), style: .doodleBold)
         }
 
@@ -167,13 +162,28 @@ private enum NoseDoodleRenderer {
             context.stroke(Rough.ellipse(in: boogerRect, wobble: 0.7, seed: 121), with: .color(DoodleStyle.ink), style: .doodleThin)
         }
 
-        let mouthCenter = CGPoint(x: face.midX, y: face.maxY - face.height * 0.14)
-        let mouthWidth: CGFloat = 60 + (isCompleting ? 28 : CGFloat(progress) * 8)
-        let mouthBulge: CGFloat = isCompleting ? 32 : 14 + CGFloat(progress) * 8
-        context.stroke(Rough.arc(from: CGPoint(x: mouthCenter.x - mouthWidth, y: mouthCenter.y),
-                                 to: CGPoint(x: mouthCenter.x + mouthWidth, y: mouthCenter.y),
-                                 bulge: mouthBulge, seed: 131),
-                       with: .color(DoodleStyle.ink), style: .doodleBold)
+        let mouthCenter = CGPoint(x: face.midX, y: face.maxY - face.height * 0.14 + expression * 10)
+        let mouthWidth: CGFloat = 42 + expression * 42 + (isCompleting ? 18 : 0)
+        if expression < 0.35 {
+            context.stroke(Rough.arc(from: CGPoint(x: mouthCenter.x - mouthWidth, y: mouthCenter.y + expression * 5),
+                                     to: CGPoint(x: mouthCenter.x + mouthWidth, y: mouthCenter.y + expression * 5),
+                                     bulge: -8 + expression * 30, seed: 131),
+                           with: .color(DoodleStyle.ink), style: .doodleBold)
+        } else {
+            let grinHeight: CGFloat = 14 + expression * 24 + (isCompleting ? 10 : 0)
+            var grin = Path()
+            grin.move(to: CGPoint(x: mouthCenter.x - mouthWidth, y: mouthCenter.y))
+            grin.addCurve(to: CGPoint(x: mouthCenter.x + mouthWidth, y: mouthCenter.y),
+                          control1: CGPoint(x: mouthCenter.x - mouthWidth * 0.45, y: mouthCenter.y + grinHeight),
+                          control2: CGPoint(x: mouthCenter.x + mouthWidth * 0.45, y: mouthCenter.y + grinHeight))
+            context.stroke(grin, with: .color(DoodleStyle.ink), style: .doodleBold)
+            if expression > 0.72 || isCompleting {
+                context.stroke(Rough.arc(from: CGPoint(x: mouthCenter.x - mouthWidth * 0.35, y: mouthCenter.y + grinHeight * 0.45),
+                                         to: CGPoint(x: mouthCenter.x + mouthWidth * 0.35, y: mouthCenter.y + grinHeight * 0.45),
+                                         bulge: 5, seed: 132),
+                               with: .color(DoodleStyle.ink.opacity(0.55)), style: .doodleThin)
+            }
+        }
 
         if isCompleting {
             let liftPhase = CGFloat(sin(min(1, (time - Double(completionTick)) * 4)))
