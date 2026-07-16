@@ -46,7 +46,7 @@ struct NoseDoodle: View {
                         }
                 )
                 }
-                GestureHintView(hintText: "画圈", isTriggered: isDragging)
+                GestureHintView(hintText: "画圈抠鼻 / Draw circles", isTriggered: isDragging)
             }
         }
     }

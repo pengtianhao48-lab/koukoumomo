@@ -3,51 +3,40 @@ import SwiftUI
 struct GestureHintView: View {
     let hintText: String
     let isTriggered: Bool
+    let usePaperBackground: Bool
 
     @State private var isVisible = true
     @State private var isDismissed = false
     @State private var pulse = false
 
-    var body: some View {
-        VStack(spacing: 7) {
-            Canvas { ctx, size in
-                let ink = DoodleStyle.ink.opacity(0.18)
-                let W = size.width
-                let H = size.height
-                var finger = Path()
-                finger.move(to: CGPoint(x: W * 0.47, y: H * 0.82))
-                finger.addCurve(to: CGPoint(x: W * 0.46, y: H * 0.30),
-                                control1: CGPoint(x: W * 0.40, y: H * 0.66),
-                                control2: CGPoint(x: W * 0.41, y: H * 0.42))
-                finger.addQuadCurve(to: CGPoint(x: W * 0.58, y: H * 0.30),
-                                    control: CGPoint(x: W * 0.52, y: H * 0.20))
-                finger.addCurve(to: CGPoint(x: W * 0.62, y: H * 0.82),
-                                control1: CGPoint(x: W * 0.66, y: H * 0.44),
-                                control2: CGPoint(x: W * 0.66, y: H * 0.66))
-                ctx.stroke(finger, with: .color(ink), style: .doodleThin)
-                ctx.stroke(Rough.arc(from: CGPoint(x: W * 0.22, y: H * 0.30),
-                                     to: CGPoint(x: W * 0.34, y: H * 0.58),
-                                     bulge: -W * 0.12,
-                                     seed: 401),
-                           with: .color(ink), style: .doodleThin)
-                ctx.stroke(Rough.arc(from: CGPoint(x: W * 0.76, y: H * 0.30),
-                                     to: CGPoint(x: W * 0.66, y: H * 0.58),
-                                     bulge: W * 0.12,
-                                     seed: 402),
-                           with: .color(ink), style: .doodleThin)
-            }
-            .frame(width: 54, height: 54)
-            .scaleEffect(pulse ? 1.06 : 0.94)
-            .opacity(pulse ? 0.78 : 0.42)
+    init(hintText: String, isTriggered: Bool, usePaperBackground: Bool = false) {
+        self.hintText = hintText
+        self.isTriggered = isTriggered
+        self.usePaperBackground = usePaperBackground
+    }
 
-            Text(hintText)
-                .font(DoodleStyle.mono(15, .bold))
-                .foregroundStyle(DoodleStyle.ink.opacity(0.18))
+    var body: some View {
+        GeometryReader { proxy in
+            VStack {
+                hintContent
+                    .padding(.horizontal, effectivePaperBackground ? 16 : 0)
+                    .padding(.vertical, effectivePaperBackground ? 8 : 0)
+                    .background {
+                        if effectivePaperBackground {
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(DoodleStyle.paper.opacity(0.75))
+                        }
+                    }
+                    .scaleEffect(pulse ? 1.02 : 0.98)
+                    .opacity(isVisible && !isDismissed ? 1 : 0)
+                    .animation(.easeInOut(duration: 0.35), value: isVisible)
+                    .animation(.easeInOut(duration: 0.35), value: isDismissed)
+                    .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: pulse)
+                    .padding(.top, proxy.size.height * 0.18)
+                Spacer()
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
-        .padding(12)
-        .opacity(isVisible && !isDismissed ? 1 : 0)
-        .animation(.easeInOut(duration: 0.35), value: isVisible)
-        .animation(.easeInOut(duration: 0.35), value: isDismissed)
         .allowsHitTesting(false)
         .task {
             pulse = true
@@ -59,6 +48,42 @@ struct GestureHintView: View {
                 isVisible = false
             }
         }
+    }
+
+    private var hintContent: some View {
+        VStack(spacing: 3) {
+            Text(copy.zh)
+                .font(DoodleStyle.mono(15, .medium))
+            Text(copy.en)
+                .font(DoodleStyle.mono(14, .medium))
+        }
+        .foregroundStyle(DoodleStyle.ink.opacity(effectivePaperBackground ? 0.7 : 0.45))
+        .multilineTextAlignment(.center)
+    }
+
+    private var effectivePaperBackground: Bool {
+        usePaperBackground || hintText == "轻触"
+    }
+
+    private var copy: (zh: String, en: String) {
+        switch hintText {
+        case "画圈":
+            return ("画圈抠鼻", "Draw circles")
+        case "轻触":
+            return ("轻触戳气泡", "Tap to pop")
+        case "拖动":
+            return ("拖动", "Drag")
+        default:
+            return splitCopy(hintText)
+        }
+    }
+
+    private func splitCopy(_ text: String) -> (zh: String, en: String) {
+        let parts = text.split(separator: "/", maxSplits: 1).map { $0.trimmingCharacters(in: .whitespaces) }
+        if parts.count == 2 {
+            return (parts[0], parts[1])
+        }
+        return (text, "")
     }
 
     private func runHintSchedule() async {

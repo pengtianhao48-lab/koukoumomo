@@ -26,7 +26,7 @@ struct FingerDoodle: View {
                 }
                 .onChange(of: time) { _, newTime in handleTimelineChange(newTime) }
             }
-            GestureHintView(hintText: "拖动", isTriggered: viewModel.progress > 0)
+            GestureHintView(hintText: "拖动咬手指 / Drag to bite", isTriggered: viewModel.progress > 0)
         }
     }
 

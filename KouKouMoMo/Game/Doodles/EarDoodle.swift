@@ -19,7 +19,7 @@ struct EarDoodle: View {
                                            time: time)
                 }
             }
-            GestureHintView(hintText: "拖动", isTriggered: viewModel.progress > 0)
+            GestureHintView(hintText: "拖动耳垂 / Drag the ear", isTriggered: viewModel.progress > 0)
         }
     }
 }

@@ -39,7 +39,7 @@ struct PenDoodle: View {
                 )
                 .onChange(of: time) { _, newTime in handleTimelineChange(newTime) }
                 }
-                GestureHintView(hintText: "拖动", isTriggered: hasDragged)
+                GestureHintView(hintText: "拖动转笔 / Drag to spin", isTriggered: hasDragged)
             }
         }
     }
