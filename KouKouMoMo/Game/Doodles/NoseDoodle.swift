@@ -143,19 +143,19 @@ struct NoseDoodleThumbnail: View {
             let halfFinger = fingerWidth * 0.5
             let topLeft = CGPoint(x: fingerTopCenter.x - halfFinger, y: fingerTopCenter.y + halfFinger)
             let topRight = CGPoint(x: fingerTopCenter.x + halfFinger, y: fingerTopCenter.y + halfFinger)
-            let bottomLeft = CGPoint(x: W * 0.52, y: H * 0.90)
-            let bottomRight = CGPoint(x: W * 0.60, y: H * 0.90)
+            let bottomLeft = CGPoint(x: W * 0.58, y: H * 0.90)
+            let bottomRight = CGPoint(x: W * 0.66, y: H * 0.90)
             finger.move(to: bottomLeft)
             finger.addLine(to: topLeft)
             finger.addQuadCurve(to: topRight,
                                 control: CGPoint(x: fingerTopCenter.x, y: fingerTopCenter.y - halfFinger * 0.9))
             finger.addLine(to: bottomRight)
             finger.addQuadCurve(to: bottomLeft,
-                                control: CGPoint(x: W * 0.56, y: H * 0.925))
+                                control: CGPoint(x: W * 0.63, y: H * 0.925))
             finger.closeSubpath()
             ctx.stroke(finger, with: .color(ink), style: .doodle)
-            ctx.stroke(Rough.arc(from: CGPoint(x: fingerTopCenter.x - fingerWidth * 0.30, y: fingerTopCenter.y + H * 0.045),
-                                 to: CGPoint(x: fingerTopCenter.x + fingerWidth * 0.30, y: fingerTopCenter.y + H * 0.045),
+            ctx.stroke(Rough.arc(from: CGPoint(x: fingerTopCenter.x - fingerWidth * 0.28, y: fingerTopCenter.y + H * 0.048),
+                                 to: CGPoint(x: fingerTopCenter.x + fingerWidth * 0.32, y: fingerTopCenter.y + H * 0.060),
                                  bulge: -fingerWidth * 0.18,
                                  seed: 119),
                        with: .color(DoodleStyle.inkSoft), style: .doodleThin)
