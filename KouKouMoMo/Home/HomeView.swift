@@ -116,7 +116,6 @@ private struct DoodleSettingsGear: View {
 }
 
 private struct DoodleSettingsSheet: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
     private var version: String {
@@ -146,26 +145,6 @@ private struct DoodleSettingsSheet: View {
                     DoodleSettingsRow(title: String(localized: "settings.contact"), value: "pengtianhao@vip.qq.com")
                 }
                 .buttonStyle(.plain)
-                Button {
-                    dismiss()
-                } label: {
-                    ZStack {
-                        Canvas { ctx, size in
-                            let rect = CGRect(origin: .zero, size: size).insetBy(dx: 3, dy: 3)
-                            ctx.fill(Rough.roundedRect(rect, corner: 18, wobble: 1.2, seed: 77), with: .color(DoodleStyle.paperShadow.opacity(0.4)))
-                            ctx.stroke(Rough.roundedRect(rect, corner: 18, wobble: 1.2, seed: 77), with: .color(DoodleStyle.ink), style: .doodle)
-                        }
-                        Text("action.close")
-                            .font(DoodleStyle.mono(17, .bold))
-                            .foregroundStyle(DoodleStyle.ink)
-                            .padding(.vertical, 14)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 52)
-                }
-                .buttonStyle(.plain)
-                .padding(.horizontal, 26)
-                .padding(.top, 10)
             }
             .padding(.bottom, 18)
             .background {
@@ -176,6 +155,12 @@ private struct DoodleSettingsSheet: View {
                 }
             }
             .padding(.horizontal, 16)
+
+            DoodleCloseButton()
+                .frame(width: 42, height: 42)
+                .padding(.top, 18)
+                .padding(.trailing, 28)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
         }
     }
 }

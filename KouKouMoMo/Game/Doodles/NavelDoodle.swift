@@ -8,7 +8,7 @@ struct NavelDoodle: View {
     @State private var lastDragTime: Date?
     @State private var lastTranslation: CGSize?
     @State private var isDragging = false
-    @State private var frictionGenerator = UIImpactFeedbackGenerator(style: .light)
+    @State private var frictionGenerator = UIImpactFeedbackGenerator(style: .medium)
     @State private var lastFrictionAt = Date.distantPast
     @State private var didPeak = false
 
@@ -42,7 +42,7 @@ struct NavelDoodle: View {
                         }
                 )
                 }
-                GestureHintView(hintText: "画圈抠肚脐 / Draw circles", isTriggered: isDragging)
+                GestureHintView(zhText: "画圈", enText: "Circle", isTriggered: isDragging)
             }
         }
     }
@@ -76,7 +76,7 @@ struct NavelDoodle: View {
         let speed = distance / dt
         fingerPoint = value.location
         guard distance > 0.7 else { return }
-        let interval = max(0.05, 0.075 - min(1, Double(speed / 900)) * 0.035)
+        let interval = max(0.04, 0.065 - min(1, Double(speed / 900)) * 0.035)
         playFrictionHaptic(intensity: max(viewModel.progress, min(1, Double(speed / 850))), minimumInterval: interval)
     }
 

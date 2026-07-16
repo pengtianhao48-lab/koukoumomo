@@ -48,7 +48,7 @@ struct BubblesDoodle: View {
                     handleTimelineChange(newTime)
                 }
                 }
-                GestureHintView(hintText: "轻触戳气泡 / Tap to pop", isTriggered: !popped.isEmpty, usePaperBackground: true)
+                GestureHintView(zhText: "点击", enText: "Tap", isTriggered: !popped.isEmpty, usePaperBackground: true)
             }
         }
     }

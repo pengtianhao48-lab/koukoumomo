@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct GestureHintView: View {
-    let hintText: String
+    let zhText: String
+    let enText: String
     let isTriggered: Bool
     let usePaperBackground: Bool
 
@@ -9,8 +10,9 @@ struct GestureHintView: View {
     @State private var isDismissed = false
     @State private var pulse = false
 
-    init(hintText: String, isTriggered: Bool, usePaperBackground: Bool = false) {
-        self.hintText = hintText
+    init(zhText: String, enText: String, isTriggered: Bool, usePaperBackground: Bool = false) {
+        self.zhText = zhText
+        self.enText = enText
         self.isTriggered = isTriggered
         self.usePaperBackground = usePaperBackground
     }
@@ -18,11 +20,14 @@ struct GestureHintView: View {
     var body: some View {
         GeometryReader { proxy in
             VStack {
-                hintContent
-                    .padding(.horizontal, effectivePaperBackground ? 16 : 0)
-                    .padding(.vertical, effectivePaperBackground ? 8 : 0)
+                Text(displayText)
+                    .font(DoodleStyle.mono(17, .medium))
+                    .foregroundStyle(DoodleStyle.ink.opacity(usePaperBackground ? 0.7 : 0.45))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, usePaperBackground ? 16 : 0)
+                    .padding(.vertical, usePaperBackground ? 8 : 0)
                     .background {
-                        if effectivePaperBackground {
+                        if usePaperBackground {
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(DoodleStyle.paper.opacity(0.75))
                         }
@@ -32,7 +37,7 @@ struct GestureHintView: View {
                     .animation(.easeInOut(duration: 0.35), value: isVisible)
                     .animation(.easeInOut(duration: 0.35), value: isDismissed)
                     .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: pulse)
-                    .padding(.top, proxy.size.height * 0.18)
+                    .padding(.top, proxy.size.height * 0.10)
                 Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -50,40 +55,8 @@ struct GestureHintView: View {
         }
     }
 
-    private var hintContent: some View {
-        VStack(spacing: 3) {
-            Text(copy.zh)
-                .font(DoodleStyle.mono(15, .medium))
-            Text(copy.en)
-                .font(DoodleStyle.mono(14, .medium))
-        }
-        .foregroundStyle(DoodleStyle.ink.opacity(effectivePaperBackground ? 0.7 : 0.45))
-        .multilineTextAlignment(.center)
-    }
-
-    private var effectivePaperBackground: Bool {
-        usePaperBackground || hintText == "轻触"
-    }
-
-    private var copy: (zh: String, en: String) {
-        switch hintText {
-        case "画圈":
-            return ("画圈抠鼻", "Draw circles")
-        case "轻触":
-            return ("轻触戳气泡", "Tap to pop")
-        case "拖动":
-            return ("拖动", "Drag")
-        default:
-            return splitCopy(hintText)
-        }
-    }
-
-    private func splitCopy(_ text: String) -> (zh: String, en: String) {
-        let parts = text.split(separator: "/", maxSplits: 1).map { $0.trimmingCharacters(in: .whitespaces) }
-        if parts.count == 2 {
-            return (parts[0], parts[1])
-        }
-        return (text, "")
+    private var displayText: String {
+        Locale.current.language.languageCode?.identifier == "zh" ? zhText : enText
     }
 
     private func runHintSchedule() async {

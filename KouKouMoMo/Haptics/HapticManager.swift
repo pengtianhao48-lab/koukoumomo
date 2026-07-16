@@ -3,8 +3,6 @@ import UIKit
 final class HapticManager {
     static let shared = HapticManager()
 
-    private let light  = UIImpactFeedbackGenerator(style: .light)
-    private let soft   = UIImpactFeedbackGenerator(style: .soft)
     private let medium = UIImpactFeedbackGenerator(style: .medium)
     private let heavy  = UIImpactFeedbackGenerator(style: .heavy)
     private let rigid  = UIImpactFeedbackGenerator(style: .rigid)
@@ -17,22 +15,22 @@ final class HapticManager {
     private var lastBubbleAt = Date.distantPast
 
     private init() {
-        [light, soft, medium, heavy, rigid].forEach { $0.prepare() }
+        [medium, heavy, rigid].forEach { $0.prepare() }
         success.prepare()
     }
 
     func start() {
-        soft.prepare()
-        soft.impactOccurred(intensity: 0.35)
-        soft.prepare()
+        medium.prepare()
+        medium.impactOccurred(intensity: 0.55)
+        medium.prepare()
     }
 
     func progress(intensity: Double) {
-        guard Date().timeIntervalSince(lastProgressAt) >= 0.05 else { return }
+        guard Date().timeIntervalSince(lastProgressAt) >= 0.04 else { return }
         lastProgressAt = Date()
-        light.prepare()
-        light.impactOccurred(intensity: CGFloat((0.22 + intensity * 0.50).clamped(to: 0.22...0.75)))
-        light.prepare()
+        medium.prepare()
+        medium.impactOccurred(intensity: CGFloat((0.35 + intensity * 0.55).clamped(to: 0.35...0.90)))
+        medium.prepare()
     }
 
     func completion() {
@@ -42,29 +40,29 @@ final class HapticManager {
     }
 
     func orbitTick(intensity: Double) {
-        frictionTick(intensity: intensity, minimumInterval: 0.05)
+        frictionTick(intensity: intensity, minimumInterval: 0.04)
     }
 
     func earPullBeat(strength: Double) {
-        guard Date().timeIntervalSince(lastBeatAt) >= 0.08 else { return }
+        guard Date().timeIntervalSince(lastBeatAt) >= 0.06 else { return }
         lastBeatAt = Date()
         rigid.prepare()
-        rigid.impactOccurred(intensity: CGFloat((0.45 + strength * 0.50).clamped(to: 0.45...0.95)))
+        rigid.impactOccurred(intensity: CGFloat((0.55 + strength * 0.45).clamped(to: 0.55...1.0)))
         rigid.prepare()
     }
 
     func earSpringBack() {
-        soft.prepare()
-        soft.impactOccurred(intensity: 0.45)
-        soft.prepare()
+        medium.prepare()
+        medium.impactOccurred(intensity: 0.65)
+        medium.prepare()
     }
 
     func chompBeat(intensity: Double) {
-        guard Date().timeIntervalSince(lastBeatAt) >= 0.07 else { return }
+        guard Date().timeIntervalSince(lastBeatAt) >= 0.06 else { return }
         lastBeatAt = Date()
-        medium.prepare()
-        medium.impactOccurred(intensity: CGFloat((0.55 + intensity * 0.45).clamped(to: 0.55...1.0)))
-        medium.prepare()
+        heavy.prepare()
+        heavy.impactOccurred(intensity: CGFloat((0.65 + intensity * 0.35).clamped(to: 0.65...1.0)))
+        heavy.prepare()
     }
 
     func bubblePop() {
@@ -82,18 +80,18 @@ final class HapticManager {
         }
     }
 
-    func frictionTick(intensity: Double, minimumInterval: TimeInterval = 0.05) {
-        guard Date().timeIntervalSince(lastProgressAt) >= max(0.05, minimumInterval) else { return }
+    func frictionTick(intensity: Double, minimumInterval: TimeInterval = 0.04) {
+        guard Date().timeIntervalSince(lastProgressAt) >= max(0.04, minimumInterval) else { return }
         lastProgressAt = Date()
         let clamped = intensity.clamped(to: 0...1)
-        let generator: UIImpactFeedbackGenerator = clamped > 0.72 ? heavy : (clamped > 0.38 ? medium : light)
+        let generator: UIImpactFeedbackGenerator = clamped > 0.38 ? heavy : medium
         generator.prepare()
-        generator.impactOccurred(intensity: CGFloat((0.25 + clamped * 0.75).clamped(to: 0.25...1.0)))
+        generator.impactOccurred(intensity: CGFloat((0.35 + clamped * 0.65).clamped(to: 0.35...1.0)))
         generator.prepare()
     }
 
     func peak() {
-        guard Date().timeIntervalSince(lastProgressAt) >= 0.05 else { return }
+        guard Date().timeIntervalSince(lastProgressAt) >= 0.04 else { return }
         lastProgressAt = Date()
         heavy.prepare()
         heavy.impactOccurred(intensity: 1.0)
@@ -101,18 +99,18 @@ final class HapticManager {
     }
 
     func releaseTail() {
-        soft.prepare()
-        soft.impactOccurred(intensity: 0.45)
-        soft.prepare()
+        medium.prepare()
+        medium.impactOccurred(intensity: 0.65)
+        medium.prepare()
     }
 
     func penHalfTurnTick(intensity: Double) {
-        let interval = 0.14 - intensity.clamped(to: 0...1) * 0.09
-        guard Date().timeIntervalSince(lastPenAt) >= max(0.05, interval) else { return }
+        let interval = 0.12 - intensity.clamped(to: 0...1) * 0.08
+        guard Date().timeIntervalSince(lastPenAt) >= max(0.04, interval) else { return }
         lastPenAt = Date()
-        medium.prepare()
-        medium.impactOccurred(intensity: CGFloat((0.45 + intensity * 0.50).clamped(to: 0.45...0.95)))
-        medium.prepare()
+        heavy.prepare()
+        heavy.impactOccurred(intensity: CGFloat((0.55 + intensity * 0.45).clamped(to: 0.55...1.0)))
+        heavy.prepare()
     }
 
     func penInertiaStart() {
@@ -122,27 +120,27 @@ final class HapticManager {
     }
 
     func penCaught() {
-        medium.prepare()
-        medium.impactOccurred(intensity: 0.85)
-        medium.prepare()
+        heavy.prepare()
+        heavy.impactOccurred(intensity: 0.9)
+        heavy.prepare()
     }
 
     func penStopped() {
-        medium.prepare()
-        medium.impactOccurred(intensity: 0.75)
-        medium.prepare()
+        heavy.prepare()
+        heavy.impactOccurred(intensity: 0.8)
+        heavy.prepare()
     }
 
     func spinLoop() {
-        penHalfTurnTick(intensity: 0.6)
+        penHalfTurnTick(intensity: 0.7)
     }
 
     func spinFlick() {
-        guard Date().timeIntervalSince(lastPenAt) >= 0.05 else { return }
+        guard Date().timeIntervalSince(lastPenAt) >= 0.04 else { return }
         lastPenAt = Date()
-        light.prepare()
-        light.impactOccurred(intensity: 0.4)
-        light.prepare()
+        medium.prepare()
+        medium.impactOccurred(intensity: 0.55)
+        medium.prepare()
     }
 
     func heavyCompletion() {
