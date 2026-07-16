@@ -1,3 +1,4 @@
+import AVFoundation
 import AudioToolbox
 import Combine
 import Foundation
@@ -19,8 +20,25 @@ final class AudioManager {
 
     private var lastContinuousAt = Date.distantPast
     private var lastPenWindAt = Date.distantPast
+    private var players: [SystemSoundID: AVAudioPlayer] = [:]
 
-    private init() {}
+    private let soundFiles: [SystemSoundID: String] = [
+        1104: "key_press_click",
+        1105: "key_press_delete",
+        1106: "ReceivedMessage",
+        1155: "Swish",
+        1156: "Pop",
+        1157: "Swish",
+        1306: "Tock"
+    ]
+
+    private init() {
+        preloadPlayers()
+    }
+
+    func preload() {
+        preloadPlayers()
+    }
 
     func start(for mode: PlayMode) {
         switch mode {
@@ -65,8 +83,19 @@ final class AudioManager {
         play(clamped > 0.55 ? 1157 : 1104)
     }
 
+    private func preloadPlayers() {
+        for (id, name) in soundFiles where players[id] == nil {
+            guard let url = Bundle.main.url(forResource: name, withExtension: "wav", subdirectory: "Sounds") else { continue }
+            guard let player = try? AVAudioPlayer(contentsOf: url) else { continue }
+            player.prepareToPlay()
+            players[id] = player
+        }
+    }
+
     private func play(_ id: SystemSoundID) {
         if Preferences.shared.isMuted { return }
-        AudioServicesPlaySystemSound(id)
+        guard let player = players[id] else { return }
+        player.currentTime = 0
+        player.play()
     }
 }
