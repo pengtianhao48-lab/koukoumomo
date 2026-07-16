@@ -92,12 +92,21 @@ struct NoseDoodle: View {
 
 struct NoseDoodleThumbnail: View {
     var body: some View {
-        Canvas { ctx, size in
-            NoseDoodleRenderer.draw(context: ctx, size: size,
-                                    progress: 0.3, velocity: 0, axis: 0,
-                                    isCompleting: false, completionTick: 0, time: 0,
-                                    fingerPoint: nil,
-                                    isDragging: false)
+        GeometryReader { proxy in
+            let referenceSize: CGFloat = 380
+            let scale = min(proxy.size.width, proxy.size.height) / referenceSize
+
+            Canvas { ctx, _ in
+                ctx.scaleBy(x: scale, y: scale)
+                ctx.translateBy(x: (proxy.size.width / scale - referenceSize) / 2,
+                                y: (proxy.size.height / scale - referenceSize) / 2)
+                NoseDoodleRenderer.draw(context: ctx,
+                                        size: CGSize(width: referenceSize, height: referenceSize),
+                                        progress: 0.3, velocity: 0, axis: 0,
+                                        isCompleting: false, completionTick: 0, time: 0,
+                                        fingerPoint: nil,
+                                        isDragging: false)
+            }
         }
     }
 }
