@@ -18,6 +18,9 @@ struct BubblesDoodle: View {
     @State private var lastTap: CGPoint? = nil
     @State private var pendingOffset: CGSize? = nil
     @State private var pendingMoveStart: TimeInterval = 0
+    @State private var recentTapIntervals: [TimeInterval] = []
+    @State private var lastAcceptedTapTime: TimeInterval?
+    @State private var burstDuration: TimeInterval = 0.35
 
     var body: some View {
         GeometryReader { proxy in
@@ -58,7 +61,7 @@ struct BubblesDoodle: View {
         // While a burst is still playing and before the canvas has moved, ignore taps to avoid
         // overlapping pending moves and wrong-position bursts.
         if pendingOffset != nil { return }
-        if let poppedAt, time - burstStart < 0.35 { return }
+        if let poppedAt, time - burstStart < burstDuration { return }
         // Nearest unpopped bubble to tap point.
         var bestIdx = -1
         var bestD: CGFloat = .greatestFiniteMagnitude
@@ -73,6 +76,7 @@ struct BubblesDoodle: View {
         }
         guard bestIdx >= 0, bestD < 140 else { return }
 
+        updateBurstDuration(forTapAt: time)
         popped.insert(bestIdx)
         poppedAt = bestIdx
         burstStart = time
@@ -106,9 +110,32 @@ struct BubblesDoodle: View {
         lastTap = p
     }
 
+    private func updateBurstDuration(forTapAt time: TimeInterval) {
+        defer { lastAcceptedTapTime = time }
+        guard let lastAcceptedTapTime else {
+            burstDuration = 0.35
+            return
+        }
+        let interval = max(0.04, time - lastAcceptedTapTime)
+        recentTapIntervals.append(interval)
+        if recentTapIntervals.count > 3 {
+            recentTapIntervals.removeFirst(recentTapIntervals.count - 3)
+        }
+        let average = recentTapIntervals.reduce(0, +) / Double(recentTapIntervals.count)
+        let target: TimeInterval
+        if average < 0.20 {
+            target = 0.13
+        } else if average < 0.40 {
+            target = 0.22
+        } else {
+            target = 0.35
+        }
+        burstDuration = burstDuration * 0.45 + target * 0.55
+    }
+
     private func moveCanvasIfBurstFinished(now: TimeInterval) {
         guard let target = pendingOffset else { return }
-        guard now - pendingMoveStart >= 0.35 else { return }
+        guard now - pendingMoveStart >= burstDuration else { return }
         pendingOffset = nil
         withAnimation(.spring(response: 0.7, dampingFraction: 0.80)) {
             offset = target
@@ -125,8 +152,8 @@ struct BubblesDoodle: View {
                 if popped.contains(idx) {
                     if idx == poppedAt {
                         let dt = time - burstStart
-                        if dt < 0.35 {
-                            let t = CGFloat(dt / 0.35)
+                        if dt < burstDuration {
+                            let t = CGFloat(dt / burstDuration)
                             let rr = Self.bubbleRadius * (0.4 + t * 1.6)
                             let alpha = 1 - t
                             for k in 0..<8 {

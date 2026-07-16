@@ -22,7 +22,7 @@ struct NoseDoodle: View {
                 }
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                        .onChanged { value in handleDrag(value, size: proxy.size) }
+                        .onChanged { value in handleDrag(value) }
                         .onEnded { _ in
                             lastDragPoint = nil
                             lastDragTime = nil
@@ -32,7 +32,7 @@ struct NoseDoodle: View {
         }
     }
 
-    private func handleDrag(_ value: DragGesture.Value, size: CGSize) {
+    private func handleDrag(_ value: DragGesture.Value) {
         let now = value.time
         defer {
             lastDragPoint = value.location
@@ -56,7 +56,7 @@ struct NoseDoodleThumbnail: View {
     var body: some View {
         Canvas { ctx, size in
             NoseDoodleRenderer.draw(context: ctx, size: size,
-                                    progress: 0, velocity: 0, axis: 0,
+                                    progress: 0.28, velocity: 0, axis: 0,
                                     isCompleting: false, completionTick: 0, time: 0,
                                     fingerPoint: nil)
         }
@@ -70,126 +70,116 @@ private enum NoseDoodleRenderer {
                      fingerPoint: CGPoint?) {
         let W = size.width
         let H = size.height
-        let face = CGRect(x: W * 0.14, y: H * 0.16, width: W * 0.72, height: H * 0.68)
-        context.stroke(Rough.ellipse(in: face, wobble: 2.2, points: 42, seed: 11),
-                       with: .color(DoodleStyle.ink), style: .doodleBold)
-
         let expression = CGFloat(progress.clamped(to: 0...1))
-        let cheekOpacity = 0.32 + Double(expression) * 0.48
-        context.fill(Rough.ellipse(in: CGRect(x: face.minX + face.width * 0.10, y: face.midY + face.height * 0.06,
-                                              width: face.width * (0.17 + expression * 0.04), height: face.width * (0.10 + expression * 0.04)),
-                                    wobble: 1.4, seed: 21),
-                     with: .color(DoodleStyle.blush.opacity(cheekOpacity)))
-        context.fill(Rough.ellipse(in: CGRect(x: face.maxX - face.width * (0.28 + expression * 0.02), y: face.midY + face.height * 0.06,
-                                              width: face.width * (0.17 + expression * 0.04), height: face.width * (0.10 + expression * 0.04)),
-                                    wobble: 1.4, seed: 22),
-                     with: .color(DoodleStyle.blush.opacity(cheekOpacity)))
+        let face = CGRect(x: W * 0.13, y: H * 0.08, width: W * 0.74, height: H * 0.78)
 
-        let eyeY = face.midY - face.height * 0.14
-        let eyeHeight: CGFloat = max(2.0, 10 + 3 * CGFloat(sin(time * 0.6)) - expression * 8)
-        for (idx, c) in [CGPoint(x: face.midX - face.width * 0.19, y: eyeY), CGPoint(x: face.midX + face.width * 0.19, y: eyeY)].enumerated() {
-            if expression < 0.55 {
-                let rect = CGRect(x: c.x - 7, y: c.y - eyeHeight / 2, width: 14, height: eyeHeight)
-                context.fill(Rough.ellipse(in: rect, wobble: 0.6, seed: 33 &+ idx), with: .color(DoodleStyle.ink))
-            } else {
-                let w: CGFloat = 22 + expression * 8
-                let bulge: CGFloat = idx == 0 ? -8 - expression * 7 : 8 + expression * 7
-                context.stroke(Rough.arc(from: CGPoint(x: c.x - w / 2, y: c.y),
-                                         to: CGPoint(x: c.x + w / 2, y: c.y),
-                                         bulge: bulge, seed: 33 &+ idx),
-                               with: .color(DoodleStyle.ink), style: .doodleBold)
-            }
-        }
-        let browTilt = 8 + expression * 20
-        for (i, cx) in [face.midX - face.width * 0.19, face.midX + face.width * 0.19].enumerated() {
-            let inward: CGFloat = i == 0 ? 1 : -1
-            context.stroke(Rough.line(from: CGPoint(x: cx - 15, y: eyeY - 20 + browTilt * inward * 0.45),
-                                      to: CGPoint(x: cx + 15, y: eyeY - 20 - browTilt * inward * 0.45),
-                                      steps: 6, amp: 1.0 + expression * 0.6, seed: 71 &+ i),
-                           with: .color(DoodleStyle.ink), style: .doodleBold)
-        }
+        var facePath = Path()
+        facePath.move(to: CGPoint(x: face.midX - face.width * 0.10, y: face.minY + face.height * 0.01))
+        facePath.addCurve(to: CGPoint(x: face.maxX - face.width * 0.07, y: face.minY + face.height * 0.26),
+                          control1: CGPoint(x: face.midX + face.width * 0.20, y: face.minY - face.height * 0.03),
+                          control2: CGPoint(x: face.maxX - face.width * 0.14, y: face.minY + face.height * 0.10))
+        facePath.addCurve(to: CGPoint(x: face.maxX - face.width * 0.05, y: face.minY + face.height * 0.74),
+                          control1: CGPoint(x: face.maxX + face.width * 0.08, y: face.minY + face.height * 0.45),
+                          control2: CGPoint(x: face.maxX + face.width * 0.04, y: face.minY + face.height * 0.62))
+        facePath.addCurve(to: CGPoint(x: face.midX, y: face.maxY),
+                          control1: CGPoint(x: face.maxX - face.width * 0.15, y: face.minY + face.height * 0.92),
+                          control2: CGPoint(x: face.midX + face.width * 0.18, y: face.maxY + face.height * 0.02))
+        facePath.addCurve(to: CGPoint(x: face.minX + face.width * 0.08, y: face.minY + face.height * 0.75),
+                          control1: CGPoint(x: face.midX - face.width * 0.25, y: face.maxY - face.height * 0.02),
+                          control2: CGPoint(x: face.minX + face.width * 0.09, y: face.minY + face.height * 0.92))
+        facePath.addCurve(to: CGPoint(x: face.minX + face.width * 0.13, y: face.minY + face.height * 0.28),
+                          control1: CGPoint(x: face.minX - face.width * 0.03, y: face.minY + face.height * 0.57),
+                          control2: CGPoint(x: face.minX + face.width * 0.02, y: face.minY + face.height * 0.41))
+        facePath.addCurve(to: CGPoint(x: face.midX - face.width * 0.10, y: face.minY + face.height * 0.01),
+                          control1: CGPoint(x: face.minX + face.width * 0.18, y: face.minY + face.height * 0.13),
+                          control2: CGPoint(x: face.midX - face.width * 0.27, y: face.minY + face.height * 0.08))
+        context.stroke(facePath, with: .color(DoodleStyle.ink), style: StrokeStyle(lineWidth: DoodleStyle.strokeBold + 0.5, lineCap: .round, lineJoin: .round))
 
-        let noseTop = CGPoint(x: face.midX, y: face.midY - face.height * 0.02)
-        let noseLeft = CGPoint(x: face.midX - face.width * 0.16, y: face.midY + face.height * 0.14)
-        let noseRight = CGPoint(x: face.midX + face.width * 0.16, y: face.midY + face.height * 0.14)
-        context.stroke(Rough.line(from: noseTop, to: noseLeft, steps: 8, amp: 1.3, seed: 101), with: .color(DoodleStyle.ink), style: .doodleBold)
-        context.stroke(Rough.line(from: noseTop, to: noseRight, steps: 8, amp: 1.3, seed: 102), with: .color(DoodleStyle.ink), style: .doodleBold)
-        context.stroke(Rough.arc(from: noseLeft, to: noseRight, bulge: 26, seed: 103), with: .color(DoodleStyle.ink), style: .doodleBold)
+        let cheekOpacity = 0.22 + Double(expression) * 0.48
+        let cheekScale = 1 + expression * 0.32
+        let leftCheek = CGRect(x: face.minX + face.width * 0.11, y: face.midY + face.height * 0.10,
+                               width: face.width * 0.18 * cheekScale, height: face.width * 0.105 * cheekScale)
+        let rightCheek = CGRect(x: face.maxX - face.width * (0.29 + expression * 0.02), y: face.midY + face.height * 0.10,
+                                width: face.width * 0.18 * cheekScale, height: face.width * 0.105 * cheekScale)
+        context.fill(Rough.ellipse(in: leftCheek, wobble: 2.2, points: 24, seed: 21), with: .color(DoodleStyle.blush.opacity(cheekOpacity)))
+        context.fill(Rough.ellipse(in: rightCheek, wobble: 2.2, points: 24, seed: 22), with: .color(DoodleStyle.blush.opacity(cheekOpacity)))
 
-        let leftNostril = CGRect(x: noseLeft.x + 6, y: noseLeft.y - 12, width: 22, height: 14)
-        let rightNostril = CGRect(x: noseRight.x - 28, y: noseRight.y - 12, width: 22, height: 14)
-        context.fill(Rough.ellipse(in: leftNostril, wobble: 0.9, seed: 111), with: .color(DoodleStyle.ink))
-        context.fill(Rough.ellipse(in: rightNostril, wobble: 0.9, seed: 112), with: .color(DoodleStyle.ink))
+        let eyeY = face.minY + face.height * (0.35 + expression * 0.015)
+        let leftEyeA = CGPoint(x: face.midX - face.width * 0.23, y: eyeY)
+        let leftEyeB = CGPoint(x: face.midX - face.width * 0.10, y: eyeY - 4 - expression * 3)
+        let rightEyeA = CGPoint(x: face.midX + face.width * 0.10, y: eyeY - 4 - expression * 3)
+        let rightEyeB = CGPoint(x: face.midX + face.width * 0.23, y: eyeY)
+        context.stroke(Rough.arc(from: leftEyeA, to: leftEyeB, bulge: -5 - expression * 4, seed: 31), with: .color(DoodleStyle.ink), style: .doodleBold)
+        context.stroke(Rough.arc(from: rightEyeA, to: rightEyeB, bulge: 5 + expression * 4, seed: 32), with: .color(DoodleStyle.ink), style: .doodleBold)
+        context.stroke(Rough.line(from: CGPoint(x: leftEyeA.x + 10, y: eyeY + 16), to: CGPoint(x: leftEyeA.x + 24, y: eyeY + 16), steps: 4, amp: 0.7, seed: 33), with: .color(DoodleStyle.ink), style: .doodleThin)
+        context.stroke(Rough.line(from: CGPoint(x: rightEyeB.x - 24, y: eyeY + 16), to: CGPoint(x: rightEyeB.x - 10, y: eyeY + 16), steps: 4, amp: 0.7, seed: 34), with: .color(DoodleStyle.ink), style: .doodleThin)
+
+        let noseTop = CGPoint(x: face.midX, y: face.minY + face.height * 0.47)
+        let noseLeft = CGPoint(x: face.midX - face.width * 0.16, y: face.minY + face.height * 0.63)
+        let noseRight = CGPoint(x: face.midX + face.width * 0.16, y: face.minY + face.height * 0.63)
+        var nose = Path()
+        nose.move(to: noseTop)
+        nose.addLine(to: noseLeft)
+        nose.addQuadCurve(to: noseRight, control: CGPoint(x: face.midX, y: face.minY + face.height * (0.67 + expression * 0.015)))
+        nose.closeSubpath()
+        context.stroke(nose, with: .color(DoodleStyle.ink), style: StrokeStyle(lineWidth: DoodleStyle.strokeBold + 0.2, lineCap: .round, lineJoin: .round))
+
+        let leftNostril = CGRect(x: noseLeft.x + face.width * 0.045, y: noseLeft.y - face.height * 0.035, width: face.width * 0.075, height: face.height * 0.033)
+        let rightNostril = CGRect(x: noseRight.x - face.width * 0.115, y: noseRight.y - face.height * 0.034, width: face.width * 0.076, height: face.height * 0.034)
+        context.fill(Rough.ellipse(in: leftNostril, wobble: 1.0, seed: 111), with: .color(DoodleStyle.ink))
+        context.fill(Rough.ellipse(in: rightNostril, wobble: 1.0, seed: 112), with: .color(DoodleStyle.ink))
 
         let nostrilCenter = CGPoint(x: rightNostril.midX, y: rightNostril.midY)
-        let defaultR: CGFloat = 2.4 + CGFloat(progress) * 2.2
-        let spin = time * 3.4 + axis * 6
-        let defaultTip = CGPoint(x: nostrilCenter.x + cos(spin) * defaultR,
-                                 y: nostrilCenter.y + sin(spin) * defaultR * 0.45)
+        let defaultR: CGFloat = 4 + expression * 6
+        let spin = time * (2.2 + Double(expression) * 3.2) + axis * 5
+        let defaultTip = CGPoint(x: nostrilCenter.x + CGFloat(cos(spin)) * defaultR,
+                                 y: nostrilCenter.y + CGFloat(sin(spin)) * defaultR * 0.45)
         let tipCenter = clamped(fingerPoint ?? defaultTip,
                                 to: nostrilCenter,
                                 radiusX: rightNostril.width * 0.34,
-                                radiusY: rightNostril.height * 0.34)
+                                radiusY: rightNostril.height * 0.36)
 
-        let baseX = face.midX + face.width * 0.20 + CGFloat(sin(time * 1.6)) * 4
-        let baseY = face.maxY + 18
-        let fingerW: CGFloat = 26
+        let baseX = face.midX + face.width * 0.18
+        let baseY = H * 0.98
+        let fingerW: CGFloat = max(18, min(W, H) * 0.075)
         var trunk = Path()
-        let control = CGPoint(x: baseX - 12, y: (baseY + tipCenter.y) / 2 + 24)
         trunk.move(to: CGPoint(x: baseX, y: baseY))
-        trunk.addQuadCurve(to: tipCenter, control: control)
+        trunk.addLine(to: tipCenter)
         context.stroke(trunk, with: .color(DoodleStyle.ink), style: StrokeStyle(lineWidth: fingerW + 3, lineCap: .round, lineJoin: .round))
         context.stroke(trunk, with: .color(DoodleStyle.paper), style: StrokeStyle(lineWidth: fingerW, lineCap: .round, lineJoin: .round))
 
-        let knuckleT: CGFloat = 0.65
-        let kx = (1-knuckleT)*(1-knuckleT)*baseX + 2*(1-knuckleT)*knuckleT*control.x + knuckleT*knuckleT*tipCenter.x
-        let ky = (1-knuckleT)*(1-knuckleT)*baseY + 2*(1-knuckleT)*knuckleT*control.y + knuckleT*knuckleT*tipCenter.y
-        context.stroke(Rough.arc(from: CGPoint(x: kx - 8, y: ky), to: CGPoint(x: kx + 8, y: ky), bulge: 3, seed: 210),
-                       with: .color(DoodleStyle.ink.opacity(0.6)), style: .doodleThin)
+        let nailY = tipCenter.y + fingerW * 0.35
+        context.stroke(Rough.arc(from: CGPoint(x: tipCenter.x - fingerW * 0.25, y: nailY),
+                                 to: CGPoint(x: tipCenter.x + fingerW * 0.25, y: nailY),
+                                 bulge: 4, seed: 211),
+                       with: .color(DoodleStyle.ink.opacity(0.58)), style: .doodleThin)
+        context.fill(Rough.ellipse(in: rightNostril, wobble: 1.0, seed: 112), with: .color(DoodleStyle.ink))
+        context.fill(Rough.ellipse(in: CGRect(x: tipCenter.x - fingerW * 0.18, y: tipCenter.y - fingerW * 0.10, width: fingerW * 0.36, height: fingerW * 0.22), wobble: 0.5, seed: 210),
+                     with: .color(DoodleStyle.paper.opacity(0.96)))
 
-        context.fill(Rough.ellipse(in: rightNostril, wobble: 0.9, seed: 112), with: .color(DoodleStyle.ink))
-        let fingertipRect = CGRect(x: tipCenter.x - 6, y: tipCenter.y - 4, width: 12, height: 8)
-        context.fill(Rough.ellipse(in: fingertipRect, wobble: 0.5, seed: 210), with: .color(DoodleStyle.paper))
-        context.stroke(Rough.ellipse(in: fingertipRect, wobble: 0.5, seed: 210), with: .color(DoodleStyle.ink), style: .doodleThin)
-        let nailRect = CGRect(x: tipCenter.x - 6, y: tipCenter.y - 3, width: 12, height: 6)
-        context.stroke(Rough.arc(from: CGPoint(x: nailRect.minX, y: nailRect.midY), to: CGPoint(x: nailRect.maxX, y: nailRect.midY), bulge: -3, seed: 211),
-                       with: .color(DoodleStyle.ink.opacity(0.55)), style: .doodleThin)
-
-        let boogerSize = 3 + CGFloat(progress) * 6
+        let boogerSize = 3 + expression * 7
         if progress > 0.02 || isCompleting {
             let boogerRect = CGRect(x: tipCenter.x - boogerSize / 2, y: tipCenter.y - boogerSize / 2, width: boogerSize, height: boogerSize)
-            context.fill(Rough.ellipse(in: boogerRect, wobble: 0.7, seed: 121), with: .color(DoodleStyle.sunshine.opacity(0.85)))
-            context.stroke(Rough.ellipse(in: boogerRect, wobble: 0.7, seed: 121), with: .color(DoodleStyle.ink), style: .doodleThin)
+            context.fill(Rough.ellipse(in: boogerRect, wobble: 0.8, seed: 121), with: .color(DoodleStyle.sunshine.opacity(0.85)))
+            context.stroke(Rough.ellipse(in: boogerRect, wobble: 0.8, seed: 121), with: .color(DoodleStyle.ink), style: .doodleThin)
         }
 
-        let mouthCenter = CGPoint(x: face.midX, y: face.maxY - face.height * 0.14 + expression * 10)
-        let mouthWidth: CGFloat = 42 + expression * 42 + (isCompleting ? 18 : 0)
-        if expression < 0.35 {
-            context.stroke(Rough.arc(from: CGPoint(x: mouthCenter.x - mouthWidth, y: mouthCenter.y + expression * 5),
-                                     to: CGPoint(x: mouthCenter.x + mouthWidth, y: mouthCenter.y + expression * 5),
-                                     bulge: -8 + expression * 30, seed: 131),
-                           with: .color(DoodleStyle.ink), style: .doodleBold)
-        } else {
-            let grinHeight: CGFloat = 14 + expression * 24 + (isCompleting ? 10 : 0)
-            var grin = Path()
-            grin.move(to: CGPoint(x: mouthCenter.x - mouthWidth, y: mouthCenter.y))
-            grin.addCurve(to: CGPoint(x: mouthCenter.x + mouthWidth, y: mouthCenter.y),
-                          control1: CGPoint(x: mouthCenter.x - mouthWidth * 0.45, y: mouthCenter.y + grinHeight),
-                          control2: CGPoint(x: mouthCenter.x + mouthWidth * 0.45, y: mouthCenter.y + grinHeight))
-            context.stroke(grin, with: .color(DoodleStyle.ink), style: .doodleBold)
-            if expression > 0.72 || isCompleting {
-                context.stroke(Rough.arc(from: CGPoint(x: mouthCenter.x - mouthWidth * 0.35, y: mouthCenter.y + grinHeight * 0.45),
-                                         to: CGPoint(x: mouthCenter.x + mouthWidth * 0.35, y: mouthCenter.y + grinHeight * 0.45),
-                                         bulge: 5, seed: 132),
-                               with: .color(DoodleStyle.ink.opacity(0.55)), style: .doodleThin)
+        let mouthY = face.minY + face.height * (0.82 + expression * 0.02)
+        let mouthW = face.width * (0.25 + expression * 0.12)
+        let mouthBulge = 8 + expression * 20
+        context.stroke(Rough.arc(from: CGPoint(x: face.midX - mouthW, y: mouthY),
+                                 to: CGPoint(x: face.midX + mouthW, y: mouthY - expression * 6),
+                                 bulge: mouthBulge, seed: 131),
+                       with: .color(DoodleStyle.ink), style: .doodleBold)
+
+        if expression > 0.65 || isCompleting {
+            for i in 0..<3 {
+                let x = face.midX + CGFloat(i - 1) * face.width * 0.18
+                context.stroke(Rough.arc(from: CGPoint(x: x - 8, y: mouthY + 18 + CGFloat(i % 2) * 4),
+                                         to: CGPoint(x: x + 8, y: mouthY + 18 + CGFloat(i % 2) * 4),
+                                         bulge: 4, seed: 151 &+ i),
+                               with: .color(DoodleStyle.inkFaint), style: .doodleThin)
             }
-        }
-
-        if isCompleting {
-            let liftPhase = CGFloat(sin(min(1, (time - Double(completionTick)) * 4)))
-            let blobRect = CGRect(x: rightNostril.midX - 20, y: rightNostril.midY - 90 - liftPhase * 20, width: 40, height: 30)
-            context.fill(Rough.ellipse(in: blobRect, wobble: 1.6, seed: 141), with: .color(DoodleStyle.sunshine))
-            context.stroke(Rough.ellipse(in: blobRect, wobble: 1.6, seed: 141), with: .color(DoodleStyle.ink), style: .doodle)
         }
     }
 
