@@ -100,11 +100,11 @@ struct NoseDoodleThumbnail: View {
             let H = size.height
             let ink = DoodleStyle.ink
 
-            let faceRect = CGRect(x: W * 0.16, y: H * 0.10, width: W * 0.68, height: H * 0.72)
-            ctx.fill(Rough.ellipse(in: faceRect, wobble: W * 0.006, points: 28, seed: 110),
-                     with: .color(DoodleStyle.paperShadow.opacity(0.22)))
-            ctx.stroke(Rough.ellipse(in: faceRect, wobble: W * 0.006, points: 28, seed: 110),
-                       with: .color(ink), style: .doodleThin)
+            let faceRect = CGRect(x: W * 0.15, y: H * 0.09, width: W * 0.70, height: H * 0.73)
+            ctx.fill(Rough.ellipse(in: faceRect, wobble: W * 0.007, points: 30, seed: 110),
+                     with: .color(DoodleStyle.paperShadow.opacity(0.20)))
+            ctx.stroke(Rough.ellipse(in: faceRect, wobble: W * 0.007, points: 30, seed: 110),
+                       with: .color(ink), style: .doodleBold)
 
             let leftEye = CGRect(x: W * 0.34, y: H * 0.33, width: W * 0.035, height: H * 0.045)
             let rightEye = CGRect(x: W * 0.61, y: H * 0.33, width: W * 0.035, height: H * 0.045)
@@ -113,8 +113,8 @@ struct NoseDoodleThumbnail: View {
 
             let leftBlush = CGRect(x: W * 0.25, y: H * 0.48, width: W * 0.13, height: H * 0.055)
             let rightBlush = CGRect(x: W * 0.62, y: H * 0.48, width: W * 0.13, height: H * 0.055)
-            ctx.fill(Rough.ellipse(in: leftBlush, wobble: W * 0.004, seed: 113), with: .color(DoodleStyle.blush.opacity(0.4)))
-            ctx.fill(Rough.ellipse(in: rightBlush, wobble: W * 0.004, seed: 114), with: .color(DoodleStyle.blush.opacity(0.4)))
+            ctx.fill(Rough.ellipse(in: leftBlush, wobble: W * 0.004, seed: 113), with: .color(DoodleStyle.blush.opacity(0.5)))
+            ctx.fill(Rough.ellipse(in: rightBlush, wobble: W * 0.004, seed: 114), with: .color(DoodleStyle.blush.opacity(0.5)))
 
             var nose = Path()
             nose.move(to: CGPoint(x: W * 0.50, y: H * 0.39))
@@ -122,10 +122,11 @@ struct NoseDoodleThumbnail: View {
             nose.addQuadCurve(to: CGPoint(x: W * 0.55, y: H * 0.55),
                               control: CGPoint(x: W * 0.50, y: H * 0.60))
             nose.closeSubpath()
-            ctx.stroke(nose, with: .color(ink), style: .doodleThin)
+            ctx.stroke(nose, with: .color(ink), style: .doodle)
 
-            let nostril = CGRect(x: W * 0.51, y: H * 0.51, width: W * 0.055, height: H * 0.032)
-            ctx.fill(Rough.ellipse(in: nostril, wobble: W * 0.002, seed: 115), with: .color(ink))
+            let nostril = CGRect(x: W * 0.505, y: H * 0.505, width: W * 0.070, height: H * 0.042)
+            ctx.fill(Rough.ellipse(in: nostril, wobble: W * 0.0025, seed: 115), with: .color(DoodleStyle.inkSoft.opacity(0.22)))
+            ctx.stroke(Rough.ellipse(in: nostril, wobble: W * 0.0025, seed: 115), with: .color(ink), style: .doodle)
 
             var mouth = Path()
             mouth.move(to: CGPoint(x: W * 0.42, y: H * 0.66))

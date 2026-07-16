@@ -149,15 +149,19 @@ private struct DoodleSettingsSheet: View {
                 Button {
                     dismiss()
                 } label: {
-                    Text("action.close")
-                        .font(DoodleStyle.mono(17, .bold))
-                        .foregroundStyle(DoodleStyle.ink)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background {
-                            RoundedRectangle(cornerRadius: 22)
-                                .fill(DoodleStyle.paperShadow.opacity(0.45))
+                    ZStack {
+                        Canvas { ctx, size in
+                            let rect = CGRect(origin: .zero, size: size).insetBy(dx: 3, dy: 3)
+                            ctx.fill(Rough.roundedRect(rect, corner: 18, wobble: 1.2, seed: 77), with: .color(DoodleStyle.paperShadow.opacity(0.4)))
+                            ctx.stroke(Rough.roundedRect(rect, corner: 18, wobble: 1.2, seed: 77), with: .color(DoodleStyle.ink), style: .doodle)
                         }
+                        Text("action.close")
+                            .font(DoodleStyle.mono(17, .bold))
+                            .foregroundStyle(DoodleStyle.ink)
+                            .padding(.vertical, 14)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 52)
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal, 26)
